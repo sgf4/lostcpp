@@ -17,7 +17,7 @@ class Window;
 struct GLFWInstance {
     GLFWwindow* m_glfw;
 
-    inline operator GLFWwindow*() {
+    operator GLFWwindow*() {
         return m_glfw;
     }
 
