@@ -14,9 +14,11 @@ Build lostcpp using the following commands
   git submodule update --init --recursive --depth 1
   mkdir build 
   cd build
-  cmake .. 
+  cmake .. -DCMAKE_BUILD_TYPE=Release
   make -j 4
 ```
+
+For cross compiling you will need using MSYS2 or Arch Linux using `x86_64-w64-mingw32-cmake` instead cmake
 
 ## Support
 
