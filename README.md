@@ -9,7 +9,11 @@ Lostcpp is a simple 3D game using OpenGL 3.3 Core. Here we don't want using or c
 Build lostcpp using the following commands
 
 ```bash
-  mkdir build
+  git clone https://github.com/sgf4/lostcpp
+  cd lostcpp
+  git submodule update --init --recursive --depth 1
+  mkdir build 
+  cd build
   cmake .. 
   make -j 4
 ```
