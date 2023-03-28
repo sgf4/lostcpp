@@ -2,7 +2,7 @@
 
 # Lostcpp
 
-Lostcpp is a simple 3D game using OpenGL 3.3 Core. Here we don't want prettend using or creating any game engine, because we don't really want any kind of abstractions.
+Lostcpp is a simple 3D game using OpenGL 3.3 Core. Here we don't want using or creating any game engine, because we don't really want any kind of abstractions.
 
 ## Build
 
