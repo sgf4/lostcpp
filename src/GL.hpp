@@ -1,6 +1,6 @@
 #pragma once
 #include "Integers.hpp"
-#include "glad.h"
+#include "Glad.hpp"
 
 #define GL_PRIORITY 103
 
