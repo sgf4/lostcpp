@@ -1,0 +1,12 @@
+[submodule "raylib"]
+	path = raylib
+	url = https://github.com/raysan5/raylib
+[submodule "glfw"]
+	path = glfw
+	url = https://github.com/glfw/glfw
+[submodule "glm"]
+	path = glm
+	url = https://github.com/g-truc/glm
+[submodule "uuid_v4"]
+	path = uuid_v4
+	url = https://github.com/crashoz/uuid_v4
