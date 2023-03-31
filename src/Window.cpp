@@ -79,6 +79,7 @@ Window::Window() {
         if (action == 2) return;
         static_cast<Window*>(glfwGetWindowUserPointer(window))->onKeyEvent(key, action);
     });
+
     // glfwSetMouseButtonCallback(m_glfwInstance, mouse_button_callback);
 }
 

@@ -41,7 +41,7 @@ public:
     }
 };
 
-struct World : GlobalUpdate {
+struct World : Update {
     UpdateManager m_updateManager;
 
     void addUpdate(Update* u) {
@@ -58,11 +58,13 @@ struct World : GlobalUpdate {
 
 
 struct WorldUpdate : Update {
-    WorldUpdate() {
-        game->getModule<WorldManager>().getCurrentWorld().addUpdate(this);
+    World& world;
+
+    WorldUpdate(World& world) : world(world) {
+        world.addUpdate(this);
     }
 
     ~WorldUpdate() {
-        game->getModule<WorldManager>().getCurrentWorld().delUpdate(this);
+        world.delUpdate(this);
     }
 };

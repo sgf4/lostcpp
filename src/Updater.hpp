@@ -11,6 +11,7 @@ struct Update {
 class UpdateManager {
     std::list<Update*> m_fns;
 public:
+
     void add(Update* u) {
         m_fns.push_back(u);
         u->m_it = std::prev(m_fns.end());
@@ -20,15 +21,9 @@ public:
         m_fns.erase(u->m_it);
     }
 
-    void update();
-};
-
-struct GlobalUpdate : Update {
-    GlobalUpdate() {
-        game->getModule<UpdateManager>().add(this);
-    }
-
-    ~GlobalUpdate() {
-        game->getModule<UpdateManager>().del(this);
+    void update() {
+        for (auto& fn : m_fns) {
+            fn->update();
+        }
     }
 };

@@ -4,22 +4,51 @@
 #include "World/World.hpp"
 #include "Constructor.hpp"
 
-Game* game;
+class Game::GameImpl {
+    friend Game;
+    UpdateManager updateManager;
+    Window window;
+    WorldManager worldManager;
+
+public:
+    GameImpl() {
+        updateManager.add(&window);
+    }
+
+    void start() {
+        while (!window.shouldClose()) {
+            updateManager.update();
+        }
+    }
+
+    void close() {
+        window.shouldClose();
+    }
+};
 
 Game::Game() {
-    game = this;
-    m_modules.init();
-
-    Window& window = game->getModule<Window>();
-    while (!window.shouldClose()) {
-        window.update();
-    }
-    delete this;
+    m_pimpl = std::make_unique<GameImpl>();
 }
 
-void close() {
-    Window& window = game->getModule<Window>();
-    window.shouldClose();
+void Game::start() {
+    m_pimpl->start();
+}
+
+void Game::close() {
+    m_pimpl->close();
+}
+
+
+UpdateManager& Game::getUpdateManager() {
+    return m_pimpl->updateManager;
+}
+
+Window& Game::getWindow() {
+    return m_pimpl->window;
+}
+
+WorldManager& Game::getWorldManager() {
+    return m_pimpl->worldManager;
 }
 
 Game::~Game() {

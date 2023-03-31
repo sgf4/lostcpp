@@ -25,7 +25,7 @@ struct GLFWInstance {
     ~GLFWInstance();
 };
 
-class Window : GlobalUpdate {
+class Window : public Update {
     int m_width {640}, m_height {480}, m_offsetX {}, m_offsetY {};
     const char* m_title {"omg"};
     bool m_vsync {true}, m_fullscreen {false}, m_cursorIshiden {false};

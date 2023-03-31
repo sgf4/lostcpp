@@ -3,6 +3,7 @@
 #include "Game.hpp"
 
 int main() {
-    new Game();
+    Game game;
+    game.start();
     return 0;
 }
