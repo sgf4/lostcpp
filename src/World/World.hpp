@@ -3,42 +3,12 @@
 #include "../Integers.hpp"
 #include "../Game.hpp"
 
-#include <memory>
-#include <unordered_map>
-
-
-struct World;
-
-// namespace UUIDv4 {
-//     struct UUID;
-// }
-
-//struct WorldStorage;
-
 class WorldManager {
-    World* current_world;
-    //std::unique_ptr<WorldStorage> storage;
-    // std::unordered_map<UUIDv4::UUID, std::unique_ptr<World>> world_storage;
+    class WorldManagerImpl; WorldManagerImpl* m_pimpl;
 public:
 
-    template<typename T>
-    void load() {
-        auto world = std::make_unique<T>();
-
-    }
-
-    void save() {
-
-    }
-
-    template<typename T>
-    void loadSaved() {
-
-    }
-
-    World& getCurrentWorld() {
-        return *current_world;
-    }
+    WorldManager();
+    ~WorldManager();
 };
 
 struct World : Update {

@@ -27,7 +27,7 @@ public:
 };
 
 Game::Game() {
-    m_pimpl = std::make_unique<GameImpl>();
+    m_pimpl = new GameImpl();
 }
 
 void Game::start() {
@@ -52,5 +52,5 @@ WorldManager& Game::getWorldManager() {
 }
 
 Game::~Game() {
-
+    delete m_pimpl;
 }

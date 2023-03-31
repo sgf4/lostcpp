@@ -1,14 +1,11 @@
 #pragma once
-#include <tuple>
-#include <memory>
-#include "Meta.hpp"
 
 class Window;
 class UpdateManager;
 class WorldManager;
 
 class Game {
-    class GameImpl; std::unique_ptr<GameImpl> m_pimpl;
+    class GameImpl; GameImpl* m_pimpl;
 
 public:
     Game();
