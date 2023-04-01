@@ -3,17 +3,29 @@
 #include "../Integers.hpp"
 #include "../Game.hpp"
 
+class World;
+
 class WorldManager {
     class WorldManagerImpl; WorldManagerImpl* m_pimpl;
+
+    void loadWorldPtr(World* world);
 public:
 
     WorldManager();
     ~WorldManager();
+
+    template<typename T>
+    void loadWorld() {
+        loadWorldPtr(new T());
+    }
+
+    World& getCurrentWorld();
 };
 
-struct World : Update {
+class World : public Update {
     UpdateManager m_updateManager;
 
+public:
     void addUpdate(Update* u) {
         m_updateManager.add(u);
     }
@@ -28,13 +40,11 @@ struct World : Update {
 
 
 struct WorldUpdate : Update {
-    World& world;
-
-    WorldUpdate(World& world) : world(world) {
-        world.addUpdate(this);
+    WorldUpdate() {
+        game->getWorldManager().getCurrentWorld().addUpdate(this);
     }
 
     ~WorldUpdate() {
-        world.delUpdate(this);
+        game->getWorldManager().getCurrentWorld().delUpdate(this);
     }
 };

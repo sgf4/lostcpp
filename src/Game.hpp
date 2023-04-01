@@ -4,6 +4,10 @@ class Window;
 class UpdateManager;
 class WorldManager;
 
+namespace uuids {
+    class uuid;
+}
+
 class Game {
     class GameImpl; GameImpl* m_pimpl;
 
@@ -17,5 +21,7 @@ public:
     UpdateManager& getUpdateManager();
     Window& getWindow();
     WorldManager& getWorldManager();
-    
+    uuids::uuid getNewUUID();
 };
+
+extern Game* game;

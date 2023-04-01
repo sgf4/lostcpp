@@ -8,6 +8,7 @@
 #include "GL.hpp"
 //#include "updater.hpp"
 #include <GLFW/glfw3.h>
+#include <algorithm>
 
 //#include "time.hpp"
 //#include "text.hpp"
@@ -80,6 +81,7 @@ Window::Window() {
         static_cast<Window*>(glfwGetWindowUserPointer(window))->onKeyEvent(key, action);
     });
 
+    std::fill_n(m_keys, sizeof(m_keys), KEY_STATE_RELEASED_REPEAT);
     // glfwSetMouseButtonCallback(m_glfwInstance, mouse_button_callback);
 }
 
@@ -186,7 +188,7 @@ void Window::onKeyEvent(u32 key, bool pressed) {
     setKeyState(static_cast<Key>(key), pressed ? KEY_STATE_DOWN : KEY_STATE_RELEASED);
 }
 
-u8 Window::getKeyState(Key key) {
+Window::KeyState Window::getKeyState(Key key) {
     return m_keys[key];
 }
 

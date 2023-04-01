@@ -35,7 +35,7 @@ class Window : public Update {
     GL::FBO m_fbo;
     GL::Texture m_texture;
 
-    enum KeyState {
+    enum KeyState : u8 {
         KEY_STATE_RELEASED,
         KEY_STATE_RELEASED_REPEAT,
         KEY_STATE_DOWN,
@@ -63,7 +63,7 @@ public:
     auto getTitle() const { return m_title; }
 
     void onKeyEvent(u32 key, bool pressed);
-    u8 getKeyState(Key key);
+    KeyState getKeyState(Key key);
     void setKeyState(Key key, KeyState value);
     bool getKey(Key key);
     bool getKeyDown(Key key);
