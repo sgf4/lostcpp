@@ -1,3 +1,5 @@
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
 set(CMAKE_BUILD_TYPE_OLD "${CMAKE_BUILD_TYPE}")
 set(CMAKE_BUILD_TYPE "Release")
 include(cmake/glfw.cmake)
@@ -6,4 +8,4 @@ include(cmake/assimp.cmake)
 include(cmake/glm.cmake)
 set(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE_OLD}")
 
-set(LOSTCPP_LIBRARIES glm glfw stduuid assimp)
+set(LOSTCPP_LIBRARIES glm glfw stduuid assimp ODE)
