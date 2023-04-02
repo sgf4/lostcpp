@@ -10,3 +10,6 @@
 [submodule "stduuid"]
 	path = stduuid
 	url = https://github.com/mariusbancila/stduuid
+[submodule "assimp"]
+	path = assimp
+	url = https://github.com/assimp/assimp

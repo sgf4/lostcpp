@@ -34,7 +34,9 @@ public:
         m_updateManager.del(u);
     }
 
-    virtual ~World();
+    virtual ~World() {
+        
+    }
 
 };
 

@@ -31,7 +31,9 @@ static void show_fps() {
 }
 
 GLFWInstance::GLFWInstance(Window& w) {
-    assert(glfwInit());
+    int result = glfwInit();
+    assert(result);
+    ((void) result);
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
