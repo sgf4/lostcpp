@@ -1,4 +1,5 @@
 #pragma once
+#include "Pimpl.hpp"
 
 class Window;
 class UpdateManager;
@@ -9,7 +10,7 @@ namespace uuids {
 }
 
 class Game {
-    class GameImpl; GameImpl* m_pimpl;
+    PIMPL(Game);
 
 public:
     Game();

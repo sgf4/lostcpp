@@ -2,11 +2,12 @@
 #include "Updater.hpp"
 #include "../Integers.hpp"
 #include "../Game.hpp"
+#include "Pimpl.hpp"
 
 class World;
 
 class WorldManager {
-    class WorldManagerImpl; WorldManagerImpl* m_pimpl;
+    PIMPL(WorldManager);
 
     void loadWorldPtr(World* world);
 public:
@@ -26,6 +27,15 @@ class World : public Update {
     UpdateManager m_updateManager;
 
 public:
+
+    World() {
+        game->getUpdateManager().add(this);
+    }
+
+    void update() {
+        m_updateManager.update();
+    }
+
     void addUpdate(Update* u) {
         m_updateManager.add(u);
     }
@@ -35,7 +45,7 @@ public:
     }
 
     virtual ~World() {
-        
+        game->getUpdateManager().del(this);
     }
 
 };

@@ -20,9 +20,7 @@ public:
     }
 };
 
-WorldManager::WorldManager() {
-    m_pimpl = new WorldManagerImpl();
-}
+WorldManager::WorldManager() {}
 
 void WorldManager::loadWorldPtr(World* world) {
     m_pimpl->loadWorld(world);
@@ -32,6 +30,4 @@ World& WorldManager::getCurrentWorld() {
     return m_pimpl->getCurrentWorld();
 }
 
-WorldManager::~WorldManager() {
-    delete m_pimpl;
-}
+WorldManager::~WorldManager() {}

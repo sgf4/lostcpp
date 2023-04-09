@@ -38,7 +38,6 @@ public:
 
 Game::Game() {
     game = this;
-    m_pimpl = new GameImpl();
 }
 
 void Game::start() {
@@ -66,5 +65,4 @@ WorldManager& Game::getWorldManager() {
 }
 
 Game::~Game() {
-    delete m_pimpl;
 }

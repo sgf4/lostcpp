@@ -13,7 +13,7 @@ include(cmake/flags.cmake)
 
 include_directories(src)
 
-file(GLOB_RECURSE LOSTCPP_SOURCES src/*.cpp build/embeds.cpp)
+file(GLOB_RECURSE LOSTCPP_SOURCES src/*.cpp src/*.hpp build/embeds.cpp)
 
 add_executable(${CMAKE_PROJECT_NAME} ${LOSTCPP_SOURCES})
 target_link_libraries(${CMAKE_PROJECT_NAME} ${LOSTCPP_LIBRARIES})
