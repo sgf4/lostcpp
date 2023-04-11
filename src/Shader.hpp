@@ -28,7 +28,21 @@ public:
         return m_uniforms[name];
     }
 
-    Shader& operator=(Shader&&);
+    Shader(Shader&& other) {
+        *this = std::move(other);
+    }
+
+    Shader& operator=(Shader&& other) {
+        m_program = other.m_program;
+        m_vSource = other.m_vSource;
+        m_fSource = other.m_fSource;
+        m_attributes = std::move(other.m_attributes);
+        m_uniforms = std::move(other.m_uniforms);
+        other.m_program = 0;
+        other.m_vSource = 0;
+        other.m_fSource = 0;
+        return *this;
+    }
 
     operator u32() {
         return m_program;

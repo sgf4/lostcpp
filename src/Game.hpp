@@ -5,6 +5,10 @@ class Window;
 class UpdateManager;
 class WorldManager;
 
+namespace GL {
+    class Shader;
+}
+
 namespace uuids {
     class uuid;
 }
@@ -23,6 +27,7 @@ public:
     Window& getWindow();
     WorldManager& getWorldManager();
     uuids::uuid getNewUUID();
+    GL::Shader& getShader(const char* name);
 };
 
 extern Game* game;

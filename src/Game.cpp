@@ -16,14 +16,24 @@ class Game::GameImpl {
     Window m_window;
     WorldManager m_worldManager;
     uuids::uuid_system_generator m_uuidGenerator;
+    std::unordered_map<std::string, GL::Shader> m_shaderStorage;
 
 public:
     GameImpl() {
         m_updateManager.add(&m_window);
 
-        // // Global shaders
-        // GL::loadShaderFromEmbed<"ui_image">();
-        // GL::loadShaderFromEmbed<"ui_box">();
+        // Global shaders
+        loadShaderFromEmbed<"ui_box">();
+        loadShaderFromEmbed<"ui_image">();
+    }
+
+    template<FixedString str>
+    GL::Shader& loadShaderFromEmbed() {
+        return m_shaderStorage.emplace(std::string(str), GL::EmbedShader<str>()).first->second;
+    }
+
+    GL::Shader& getShader(const char* name) {
+        return m_shaderStorage[name];
     }
 
     void start() {
@@ -67,6 +77,10 @@ Window& Game::getWindow() {
 
 WorldManager& Game::getWorldManager() {
     return m_pimpl->m_worldManager;
+}
+
+GL::Shader& Game::getShader(const char* name) {
+    return m_pimpl->getShader(name);
 }
 
 Game::~Game() {
