@@ -11,19 +11,24 @@ struct Triangle : Entity {
         GL::VBO m_vbo;
         GL::EmbedShader<"triangle"> m_shader;
         static constexpr std::initializer_list<float> m_vertices {
-            -0.5f, -0.5f,
-            0.5f, -0.5f,
-            0.0f, 0.5f
+           -0.5f,-0.5f,    1.f, 1.f, 0.f,
+            0.5f, -0.5f,   0.f, 1.f, 1.f,
+            0.0f,  0.5f,   1.f, 0.f, 1.f
         };
+        enum Attribs {
+            APOS,
+            ACOLOR
+        };
+        
         Loader() {
             glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
             glBufferData(GL_ARRAY_BUFFER, m_vertices.size()*sizeof(float), m_vertices.begin(), GL_DYNAMIC_DRAW);
             
             glBindVertexArray(m_vao);
-
-            const u32 aPos = 0;
-            glVertexAttribPointer(aPos, 2, GL_FLOAT, GL_FALSE, sizeof(float)*2, NULL);
-            glEnableVertexAttribArray(aPos);
+            glVertexAttribPointer(APOS, 2, GL_FLOAT, GL_FALSE, sizeof(float)*5, NULL);
+            glEnableVertexAttribArray(APOS);
+            glVertexAttribPointer(ACOLOR, 3, GL_FLOAT, GL_FALSE, sizeof(float)*5, (void*)(2*sizeof(float)));
+            glEnableVertexAttribArray(ACOLOR);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
         }

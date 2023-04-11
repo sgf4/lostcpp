@@ -9,6 +9,6 @@ uniform vec4 ucolor;
 uniform sampler2D utex;
 
 void main() {
-    vec4 c = texture(utex, tex_coord*utex_size+utex_offset);
+    vec4 c = texture(utex, tex_coord/utex_size+utex_offset);
     out_color = c * ucolor;
 }

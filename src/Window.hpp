@@ -4,8 +4,8 @@
 #include "Integers.hpp"
 #include "Shader.hpp"
 
-#define RESOLUTION_WIDTH (640)
-#define RESOLUTION_HEIGHT (480)
+#define RESOLUTION_WIDTH (160)
+#define RESOLUTION_HEIGHT (120)
 
 #define ASPECT_RATIO_Y ((float) RESOLUTION_WIDTH/RESOLUTION_HEIGHT)
 #define ASPECT_RATIO_X ((float) RESOLUTION_HEIGHT/RESOLUTION_WIDTH)

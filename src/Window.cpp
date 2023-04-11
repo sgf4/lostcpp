@@ -149,7 +149,7 @@ void Window::update() {
     glUseProgram(ui_image);
     glUniform4f(ui_image.getUniform("ucolor"), 1, 1, 1, 1);
     glUniform2f(ui_image.getUniform("uoffset"), 0, 0);
-    glUniform2f(ui_image.getUniform("usize"), 1, -1);
+    glUniform2f(ui_image.getUniform("usize"), 1, 1);
     glUniform2f(ui_image.getUniform("utex_offset"), 0, 0);
     glUniform2f(ui_image.getUniform("utex_size"), 1, 1);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
