@@ -17,3 +17,6 @@ file(GLOB_RECURSE LOSTCPP_SOURCES src/*.cpp src/*.hpp build/embeds.cpp)
 
 add_executable(${CMAKE_PROJECT_NAME} ${LOSTCPP_SOURCES})
 target_link_libraries(${CMAKE_PROJECT_NAME} ${LOSTCPP_LIBRARIES})
+target_precompile_headers(${CMAKE_PROJECT_NAME} PUBLIC 
+    src/uuid.hpp
+)

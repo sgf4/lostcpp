@@ -13,14 +13,11 @@ static const float square_vertices[] = {
 };
 
 Instance::Instance() {
-    gladLoaderLoadGL();
-    
-    glGenBuffers(1, &square_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, square_vbo);
+    instance = this;
+    glBindBuffer(GL_ARRAY_BUFFER, m_squareVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(square_vertices), square_vertices, GL_STATIC_DRAW);
     
-    glGenVertexArrays(1, &square_vao);
-    glBindVertexArray(square_vao);
+    glBindVertexArray(m_squareVAO);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), NULL);
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -33,7 +30,6 @@ Instance::Instance() {
 
 
 Instance::~Instance() {
-    gladLoaderUnloadGL();
 }
 
 // GLTask gl_task_queue[GL_TASKS_MAX_QTY]; 

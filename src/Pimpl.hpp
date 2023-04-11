@@ -3,7 +3,7 @@
 
 template<typename T>
 class Pimpl {
-    T* m_pimpl;
+    T* m_pimpl {};
 
 public:
     template<typename... Ts>
@@ -16,7 +16,15 @@ public:
         other.m_pimpl = 0;
     }
 
+    Pimpl& operator=(Pimpl&& other) {
+        if (m_pimpl) delete m_pimpl;
+        m_pimpl = other;
+        other.m_pimpl = 0;
+        return *this;
+    }
+
     Pimpl(const Pimpl&) = delete;
+    Pimpl& operator=(const Pimpl&) = delete;
 
     ~Pimpl() {
         delete m_pimpl;

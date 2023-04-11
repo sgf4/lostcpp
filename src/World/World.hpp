@@ -1,34 +1,45 @@
 #pragma once
-#include "Updater.hpp"
+#include "../Updater.hpp"
 #include "../Integers.hpp"
 #include "../Game.hpp"
-#include "Pimpl.hpp"
+#include "../Pimpl.hpp"
+#include "../uuid.hpp"
+
+#include <memory>
+#include <unordered_map>
 
 class World;
 
 class WorldManager {
-    PIMPL(WorldManager);
+    std::unordered_map<uuids::uuid, std::unique_ptr<World>> m_worlds;
+    World* m_currentWorld;
 
-    void loadWorldPtr(World* world);
+
 public:
-
-    WorldManager();
-    ~WorldManager();
+    void loadWorldPtr(World* world) {
+        m_currentWorld = world;
+        m_worlds[game->getNewUUID()] = std::unique_ptr<World> (world);
+    }
 
     template<typename T>
     void loadWorld() {
         loadWorldPtr(new T());
     }
 
-    World& getCurrentWorld();
+    World& getCurrentWorld() {
+        return *m_currentWorld;
+    }
 };
 
 class World : public Update {
     UpdateManager m_updateManager;
-
+    
 public:
 
+    inline static World* current;
+
     World() {
+        current = this;
         game->getUpdateManager().add(this);
     }
 

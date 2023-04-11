@@ -2,10 +2,6 @@
 #include "Integers.hpp"
 #include "Glad.hpp"
 
-#define GL_PRIORITY 103
-
-
-
 // void gl_task_queue_runtasks(void);
 // void gl_task_queue_execute(void (*fn) (void*), void* arg);
 
@@ -15,7 +11,7 @@ struct ID {
     u32 m_id;
     ID(u32 id = 0) : m_id(id) {}
 
-    operator u32() {
+    operator u32() const {
         return m_id;
     }
 
@@ -72,11 +68,28 @@ struct Texture : ID {
     }
 };
 
-struct Instance {
-    VAO square_vao {0};
-    VBO square_vbo {0};
+class Instance {
+    struct I { 
+        I() {
+            gladLoaderLoadGL();
+        }
+        ~I() {
+            gladLoaderUnloadGL();
+        }
+    } m_loader;
+    VAO m_squareVAO;
+    VBO m_squareVBO;
+
+public:
+
+    u32 getSquareVAO() const {
+        return m_squareVAO;
+    }
+
     Instance();
     ~Instance();
 };
+
+inline Instance* instance;
 
 }

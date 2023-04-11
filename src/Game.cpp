@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "Shader.hpp"
 #include "Window.hpp"
 #include "Updater.hpp"
 #include "World/World.hpp"
@@ -19,6 +20,10 @@ class Game::GameImpl {
 public:
     GameImpl() {
         m_updateManager.add(&m_window);
+
+        // // Global shaders
+        // GL::loadShaderFromEmbed<"ui_image">();
+        // GL::loadShaderFromEmbed<"ui_box">();
     }
 
     void start() {

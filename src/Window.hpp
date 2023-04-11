@@ -2,6 +2,7 @@
 #include "Updater.hpp"
 #include "GL.hpp"
 #include "Integers.hpp"
+#include "Shader.hpp"
 
 #define RESOLUTION_WIDTH (640)
 #define RESOLUTION_HEIGHT (480)

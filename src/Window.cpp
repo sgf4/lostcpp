@@ -3,6 +3,7 @@
 #include <assert.h>
 
 #include "Constructor.hpp"
+#include "Shader.hpp"
 #include "Window.hpp"
 //#include "font.hpp"
 #include "GL.hpp"
@@ -129,11 +130,7 @@ void Window::setVsync(bool v) {
 
 void Window::update() {
     /* Render here */
-    glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
-    glViewport(0, 0, RESOLUTION_WIDTH, RESOLUTION_HEIGHT);
-    glClearColor(0.0, 0.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    
+
     //glViewport(0, 0, window_width, window_height);
     if (getKeyDown(KEY_F11)) {
         setFullscreen(!m_fullscreen);
@@ -141,20 +138,17 @@ void Window::update() {
     
     show_fps();
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(m_offsetX, m_offsetY, m_width, m_height);
-    
-    //glClearColor(1.0, 1.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
+    // glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    // glBindVertexArray(square_vao);
-    // glBindTexture(GL_TEXTURE_2D, texture);
-    // glUseProgram(PROGRAM(ui_image));
-    // glUniform4f(UNIFORM(ui_image, ucolor), 1, 1, 1, 1);
-    // glUniform2f(UNIFORM(ui_image, uoffset), 0, 0);
-    // glUniform2f(UNIFORM(ui_image, usize), 1, -1);
-    // glUniform2f(UNIFORM(ui_image, utex_offset), 0, 0);
-    // glUniform2f(UNIFORM(ui_image, utex_size), 1, 1);
+    // glBindVertexArray(m_glInstance.getSquareVAO());
+    // glBindTexture(GL_TEXTURE_2D, m_texture);
+    // auto& ui_image = GL::shader<"ui_image">; 
+    // glUseProgram(ui_image);
+    // glUniform4f(ui_image.getUniform("ucolor"), 1, 1, 1, 1);
+    // glUniform2f(ui_image.getUniform("uoffset"), 0, 0);
+    // glUniform2f(ui_image.getUniform("usize"), 1, -1);
+    // glUniform2f(ui_image.getUniform("utex_offset"), 0, 0);
+    // glUniform2f(ui_image.getUniform("utex_size"), 1, 1);
     // glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     // glBindTexture(GL_TEXTURE_2D, 0);
     // glBindVertexArray(0);
@@ -165,6 +159,14 @@ void Window::update() {
     /* Poll for and process events */
     glfwPollEvents();
 
+    // glViewport(m_offsetX, m_offsetY, m_width, m_height);
+
+    // glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+    // glViewport(0, 0, RESOLUTION_WIDTH, RESOLUTION_HEIGHT);
+    // glClearColor(0.0, 0.0, 0.0, 1.0);
+    // glClear(GL_COLOR_BUFFER_BIT);
+
+    //glClearColor(1.0, 1.0, 0.0, 1.0);
 
 //    glfwTerminate();
 }
