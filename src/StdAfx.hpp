@@ -13,6 +13,3 @@
 #include <string_view>
 #include <tuple>
 #include "Integers.hpp"
-
-#define UUID_SYSTEM_GENERATOR
-#include <uuid.h>

@@ -8,35 +8,15 @@
 
 class World;
 
-class WorldManager {
-    std::unordered_map<uuids::uuid, std::unique_ptr<World>> m_worlds;
-    World* m_currentWorld;
-
-
-public:
-    void loadWorldPtr(World* world) {
-        m_currentWorld = world;
-        m_worlds[game->getNewUUID()] = std::unique_ptr<World> (world);
-    }
-
-    template<typename T>
-    void loadWorld() {
-        loadWorldPtr(new T());
-    }
-
-    World& getCurrentWorld() {
-        return *m_currentWorld;
-    }
-};
-
 class World : public Update {
     UpdateManager m_updateManager;
-    
+    u64 m_id;
 public:
 
     inline static World* current;
 
     World() {
+        m_id = game->getNewId();
         current = this;
         game->getUpdateManager().add(this);
     }
@@ -53,12 +33,36 @@ public:
         m_updateManager.del(u);
     }
 
+    auto getId() const {
+        return m_id;
+    }
+
     virtual ~World() {
         game->getUpdateManager().del(this);
     }
 
 };
 
+class WorldManager {
+    std::unordered_map<uint64_t, std::unique_ptr<World>> m_worlds;
+    World* m_currentWorld;
+
+
+public:
+    void loadWorldPtr(World* world) {
+        m_currentWorld = world;
+        m_worlds[world->getId()] = std::unique_ptr<World> (world);
+    }
+
+    template<typename T>
+    void loadWorld() {
+        loadWorldPtr(new T());
+    }
+
+    World& getCurrentWorld() {
+        return *m_currentWorld;
+    }
+};
 
 struct WorldUpdate : Update {
     WorldUpdate() {

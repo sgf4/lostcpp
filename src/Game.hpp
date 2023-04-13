@@ -9,10 +9,6 @@ namespace GL {
     class Shader;
 }
 
-namespace uuids {
-    class uuid;
-}
-
 class Game {
     PIMPL(Game);
 
@@ -26,8 +22,8 @@ public:
     UpdateManager& getUpdateManager();
     Window& getWindow();
     WorldManager& getWorldManager();
-    uuids::uuid getNewUUID();
     GL::Shader& getShader(const char* name);
+    u64 getNewId();
 };
 
 extern Game* game;

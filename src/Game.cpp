@@ -5,9 +5,6 @@
 #include "World/World.hpp"
 #include "Constructor.hpp"
 
-#define UUID_SYSTEM_GENERATOR
-#include <uuid.h>
-
 Game* game;
 
 class Game::GameImpl {
@@ -15,7 +12,6 @@ class Game::GameImpl {
     UpdateManager m_updateManager;
     Window m_window;
     WorldManager m_worldManager;
-    uuids::uuid_system_generator m_uuidGenerator;
     std::unordered_map<std::string, GL::Shader> m_shaderStorage;
 
 public:
@@ -46,8 +42,9 @@ public:
         m_window.shouldClose();
     }
 
-    uuids::uuid getNewUUID() {
-        return m_uuidGenerator();
+    u64 getNewId() {
+        static u64 id {};
+        return id++;
     }
 };
 
@@ -63,8 +60,8 @@ void Game::close() {
     m_pimpl->close();
 }
 
-uuids::uuid Game::getNewUUID() {
-    return m_pimpl->getNewUUID();
+u64 Game::getNewId() {
+    return m_pimpl->getNewId();
 }
 
 UpdateManager& Game::getUpdateManager() {

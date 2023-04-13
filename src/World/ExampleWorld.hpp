@@ -5,7 +5,6 @@
 
 class ExampleWorld : public World {
     LoadManager<Triangle> m_loader;
-
     Triangle m_triangle;
     
 public:
