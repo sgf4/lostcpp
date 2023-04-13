@@ -9,15 +9,7 @@ class ExampleWorld : public World {
     Triangle m_triangle;
     
 public:
-    ExampleWorld() {
-        printf("%s\n", __PRETTY_FUNCTION__);
-    }
-    ~ExampleWorld() {
-        printf("%s\n", __PRETTY_FUNCTION__);
-    }
-
     void update() {
         World::update();
     }
 };
-

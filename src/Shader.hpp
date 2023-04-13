@@ -4,8 +4,7 @@
 #include "FixedString.hpp"
 #include "Pimpl.hpp"
 
-#include <unordered_map>
-#include <string>
+#include "StdAfx.hpp"
 
 namespace GL {
 
@@ -51,9 +50,7 @@ public:
 
 template<FixedString str>
 struct EmbedShader : Shader { 
-    EmbedShader() : Shader(embed<"shaders/" + str + ".vert">, embed<"shaders/" + str + ".frag">) {
-
-    }
+    EmbedShader() : Shader(embed<"shaders/" + str + ".vert">.newXorInstance(), embed<"shaders/" + str + ".frag">.newXorInstance()) {}
 };
 
 }

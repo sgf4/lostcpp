@@ -16,10 +16,10 @@ foreach(fpath ${embeds})
     file(READ ${fpath} filedata HEX)
 
     string(LENGTH "${filedata}" filedata_length)
-    math(EXPR filedata_length "${filedata_length}/2")
+    math(EXPR filedata_length "${filedata_length}/2+1")
 
     # Convert hex data for C compatibility
     string(REGEX REPLACE "([0-9a-f][0-9a-f])" "0x\\1," filedata ${filedata})
     # Append data to output file
-    file(APPEND ${output} "unsigned char ${fname_c}_data[] {${filedata} 0x00}; template<> Embed embed<\"${fname}\"> { ${fname_c}_data, sizeof(${fname_c}_data)};\n")
+    file(APPEND ${output} "auto ${fname_c}_data {ctimeXor({${filedata} 0x00}, \"${fname}\")}; template<> Embed embed<\"${fname}\"> { ${fname_c}_data, \"${fname}\"};\n")
 endforeach()

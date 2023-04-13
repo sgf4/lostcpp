@@ -1,12 +1,11 @@
-#include <stdio.h>
 #include "Window.hpp"
 #include "Game.hpp"
-#include <uuid.h>
 
 #include "World/ExampleWorld.hpp"
 #include "Embed.hpp"
 
 #include "World/World.hpp"
+#include "Embed.hpp"
 
 int main() {
     Game game;

@@ -19,13 +19,15 @@ Shader::Shader(const char* vsource, const char* fsource) : m_vSource(vsource), m
     glGetShaderiv(m_vs, GL_COMPILE_STATUS, &success);
     if(!success) {
         glGetShaderInfoLog(m_vs, 512, 0, infoLog);
-        fprintf(stderr, "Compiling vertex shader: %s\n", infoLog);
+        printf("vsource: %s\n", vsource);
+        fprintf(stderr, "Error compiling vertex shader: %s\n", infoLog);
     }
 
     glGetShaderiv(m_fs, GL_COMPILE_STATUS, &success);
     if(!success) {
         glGetShaderInfoLog(m_fs, 512, 0, infoLog);
-        fprintf(stderr, "Compiling fragment shader %s\n", infoLog);
+        printf("fsource: %s\n", fsource);
+        fprintf(stderr, "Error compiling fragment shader %s\n", infoLog);
     }
 
     // Link shaders

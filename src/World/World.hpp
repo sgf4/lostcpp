@@ -3,10 +3,8 @@
 #include "../Integers.hpp"
 #include "../Game.hpp"
 #include "../Pimpl.hpp"
-#include "../uuid.hpp"
 
-#include <memory>
-#include <unordered_map>
+#include "StdAfx.hpp"
 
 class World;
 

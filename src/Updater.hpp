@@ -1,6 +1,6 @@
 #pragma once
-#include <list>
 
+#include "StdAfx.hpp"
 #include "Game.hpp"
 
 struct Update {
