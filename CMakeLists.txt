@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
 project(lostcpp VERSION 0.1)
-set(CMAKE_ECHO_COLOR "--blue")
+option(USE_PCH "Use precompiled headers (StdAfx.hpp)" ON)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -15,6 +15,9 @@ file(GLOB_RECURSE LOSTCPP_SOURCES src/*.cpp src/*.hpp build/embeds.cpp)
 
 add_executable(${CMAKE_PROJECT_NAME} ${LOSTCPP_SOURCES})
 target_link_libraries(${CMAKE_PROJECT_NAME} ${LOSTCPP_LIBRARIES})
-target_precompile_headers(${CMAKE_PROJECT_NAME} PUBLIC 
-    src/StdAfx.hpp
-)
+
+if (USE_PCH)
+    target_precompile_headers(${CMAKE_PROJECT_NAME} PUBLIC 
+        src/StdAfx.hpp
+    )
+endif()
