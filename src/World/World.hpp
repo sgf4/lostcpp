@@ -4,35 +4,42 @@
 #include "../Game.hpp"
 #include "../Pimpl.hpp"
 #include "Camera.hpp"
+#include "../Window.hpp"
+#include "../Time.hpp"
 
 #include <unordered_map>
+
+#define WORLD (*World::current)
+#define WTIME WORLD.getTime()
 
 class World;
 inline World* current_world;
 
 class World : public Update {
+    u64 m_id {game->getNewId()};
     UpdateManager m_updateManager;
     struct AddCurrent { AddCurrent(World* ptr) { current = ptr; } } m_addPtr {this};
-    Camera m_camera;
-    u64 m_id;
+    Time m_time;
+    Camera m_camera {true};
 public:
 
     inline static World* current;
 
     World() {
-        m_id = game->getNewId();
-        game->getUpdateManager().add(this);
+        game->getUpdateManager().add(*this);
+        m_updateManager.add(m_time);
+        WINDOW.hideCursor();
     }
 
     void update() {
         m_updateManager.update();
     }
 
-    void addUpdate(Update* u) {
+    void addUpdate(Update& u) {
         m_updateManager.add(u);
     }
 
-    void delUpdate(Update* u) {
+    void delUpdate(Update& u) {
         m_updateManager.del(u);
     }
 
@@ -44,8 +51,12 @@ public:
         return m_camera;
     }
 
+    Time& getTime() {
+        return m_time;
+    }
+
     virtual ~World() {
-        game->getUpdateManager().del(this);
+        game->getUpdateManager().del(*this);
     }
 };
 
@@ -70,12 +81,3 @@ public:
     }
 };
 
-struct WorldUpdate : Update {
-    WorldUpdate() {
-        current_world->addUpdate(this);
-    }
-
-    ~WorldUpdate() {
-        current_world->delUpdate(this);
-    }
-};

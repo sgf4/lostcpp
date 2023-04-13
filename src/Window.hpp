@@ -1,9 +1,12 @@
 #pragma once
+#include "Game.hpp"
 #include "Updater.hpp"
 #include "GL.hpp"
+#include "Keycodes.hpp"
 #include "Integers.hpp"
-#include "Shader.hpp"
+#include <glm/vec2.hpp>
 
+#define WINDOW game->getWindow()
 #define RESOLUTION_WIDTH (160)
 #define RESOLUTION_HEIGHT (120)
 
@@ -30,6 +33,9 @@ class Window : public Update {
     int m_width {640}, m_height {480}, m_offsetX {}, m_offsetY {};
     const char* m_title {"omg"};
     bool m_vsync {true}, m_fullscreen {false}, m_cursorIshiden {false};
+    
+    glm::vec2 m_mouseDirection {};
+    glm::vec2 m_mousePosition {};
 
     GLFWInstance m_glfwInstance {*this};
     GL::Instance m_glInstance;
@@ -43,9 +49,10 @@ class Window : public Update {
         KEY_STATE_DOWN_REPEAT,
     };
 
-    #include "Keycodes.hpp"
-
     KeyState m_keys[512];
+
+    void onKeyEvent(u32 key, bool pressed);
+    void onMouseEvent(glm::vec2 pos);
 
 public:
     Window();
@@ -63,11 +70,10 @@ public:
     auto getHeight() const { return m_height; }
     auto getTitle() const { return m_title; }
 
-    void onKeyEvent(u32 key, bool pressed);
-    KeyState getKeyState(Key key);
+    KeyState getKeyState(Key key) const;
     void setKeyState(Key key, KeyState value);
-    bool getKey(Key key);
+    bool getKey(Key key) const;
     bool getKeyDown(Key key);
     bool getKeyReleased(Key key);
-
+    glm::vec2 getMouseDir();
 };

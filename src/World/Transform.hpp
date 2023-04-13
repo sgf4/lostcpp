@@ -1,6 +1,7 @@
 #pragma once 
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
+#include "../GL.hpp"
 
 class Transform {
 
@@ -8,24 +9,25 @@ protected:
     glm::vec3 m_scale {1, 1, 1};
     glm::vec3 m_rotation {};
     glm::vec3 m_position {};
-    glm::mat4 m_model;
+    glm::mat4 m_model { 1.f };
 
     void update();
+    void updateUniforms(GL::Shader&);
 
 public:
-    glm::vec3 getScale() {
+    glm::vec3& getScale() {
         return m_scale;
     }
 
-    glm::vec3 getRotation() {
+    glm::vec3& getRotation() {
         return m_rotation;
     }
 
-    glm::vec3 getPosition() {
+    glm::vec3& getPosition() {
         return m_position;
     }
 
-    glm::mat4 getModel() {
+    glm::mat4& getModel() {
         return m_model;
     }
 

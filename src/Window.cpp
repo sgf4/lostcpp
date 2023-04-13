@@ -2,10 +2,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "Shader.hpp"
 #include "Window.hpp"
 //#include "font.hpp"
-#include "GL.hpp"
 //#include "updater.hpp"
 #include <GLFW/glfw3.h>
 #include <algorithm>
@@ -57,6 +55,10 @@ Window::Window() {
 
     glfwSetWindowSizeCallback(m_glfwInstance, [] (GLFWwindow* wnd, int w, int h) {
         static_cast<Window*>(glfwGetWindowUserPointer(wnd))->onResize(w, h);
+    });
+
+    glfwSetCursorPosCallback(m_glfwInstance, [] (GLFWwindow* wnd, double x, double y) {
+        static_cast<Window*>(glfwGetWindowUserPointer(wnd))->onMouseEvent({x, y});
     });
 
     //window_hide_cursor();
@@ -192,7 +194,7 @@ void Window::onKeyEvent(u32 key, bool pressed) {
     setKeyState(static_cast<Key>(key), pressed ? KEY_STATE_DOWN : KEY_STATE_RELEASED);
 }
 
-Window::KeyState Window::getKeyState(Key key) {
+Window::KeyState Window::getKeyState(Key key) const {
     return m_keys[key];
 }
 
@@ -200,7 +202,7 @@ void Window::setKeyState(Key key, KeyState state) {
     m_keys[key] = state;
 }
 
-bool Window::getKey(Key key) {
+bool Window::getKey(Key key) const {
     auto state = getKeyState(key);
     return state == KEY_STATE_DOWN || state == KEY_STATE_DOWN_REPEAT;
 }
@@ -217,4 +219,15 @@ bool Window::getKeyReleased(Key key) {
     bool released = state == KEY_STATE_RELEASED;
     if (released) setKeyState(key, KEY_STATE_RELEASED_REPEAT);
     return released;
+}
+
+void Window::onMouseEvent(glm::vec2 pos) {
+    m_mouseDirection = pos-m_mousePosition;
+    m_mousePosition = pos;
+}
+
+glm::vec2 Window::getMouseDir() {
+    auto dir = m_mouseDirection;
+    m_mouseDirection = {0, 0};
+    return dir;
 }

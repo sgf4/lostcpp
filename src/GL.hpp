@@ -1,6 +1,7 @@
 #pragma once
 #include "Integers.hpp"
 #include "Glad.hpp"
+#include "Shader.hpp"
 
 // void gl_task_queue_runtasks(void);
 // void gl_task_queue_execute(void (*fn) (void*), void* arg);

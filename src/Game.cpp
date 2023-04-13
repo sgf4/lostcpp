@@ -1,5 +1,5 @@
 #include "Game.hpp"
-#include "Shader.hpp"
+#include "GL.hpp"
 #include "Window.hpp"
 #include "Updater.hpp"
 #include "World/World.hpp"
@@ -11,12 +11,14 @@ class Game::GameImpl {
     friend Game;
     UpdateManager m_updateManager;
     Window m_window;
+    Time m_time;
     WorldManager m_worldManager;
     std::unordered_map<std::string, GL::Shader> m_shaderStorage;
 
 public:
     GameImpl() {
-        m_updateManager.add(&m_window);
+        m_updateManager.add(m_window);
+        m_updateManager.add(m_time);
 
         // Global shaders
         loadShaderFromEmbed<"ui_box">();

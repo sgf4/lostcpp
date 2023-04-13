@@ -1,12 +1,12 @@
 #pragma once
 #include "GL.hpp"
-#include "Shader.hpp"
 #include "Entity.hpp"
 #include "Camera.hpp"
 #include "../Loader.hpp"
+#include "Window.hpp"
 
 struct Triangle : Entity {
-    struct Loader {
+    inline static struct Loader {
         GL::VAO m_vao;
         GL::VBO m_vbo;
         GL::EmbedShader<"triangle"> m_shader;
@@ -21,7 +21,6 @@ struct Triangle : Entity {
         };
         
         Loader() {
-            World::current->getCamera().addShader(&m_shader);
             glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
             glBufferData(GL_ARRAY_BUFFER, m_vertices.size()*sizeof(float), m_vertices.begin(), GL_DYNAMIC_DRAW);
             
@@ -33,17 +32,24 @@ struct Triangle : Entity {
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
         }
-    };
+    }* loader;
+
+    Triangle() {
+        setEntityShader(loader->m_shader);
+    }
 
     void update() {
-        auto l = loader<Triangle>;
+        Entity::update();
 
-        glBindVertexArray(l->m_vao);
-        glUseProgram(l->m_shader);
+        glBindVertexArray(loader->m_vao);
+        glUseProgram(loader->m_shader);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glBindVertexArray(0);
         glUseProgram(0);
+
+        if (WINDOW.getKey(KEY_RIGHT)) m_rotation.z += 0.5;
+        if (WINDOW.getKey(KEY_LEFT)) m_rotation.z -= 0.5;
     }
 };
 
