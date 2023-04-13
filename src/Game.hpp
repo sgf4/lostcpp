@@ -1,5 +1,6 @@
 #pragma once
 #include "Pimpl.hpp"
+#include "Integers.hpp"
 
 class Window;
 class UpdateManager;

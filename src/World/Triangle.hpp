@@ -2,6 +2,7 @@
 #include "GL.hpp"
 #include "Shader.hpp"
 #include "Entity.hpp"
+#include "Camera.hpp"
 #include "../Loader.hpp"
 
 struct Triangle : Entity {
@@ -20,6 +21,7 @@ struct Triangle : Entity {
         };
         
         Loader() {
+            World::current->getCamera().addShader(&m_shader);
             glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
             glBufferData(GL_ARRAY_BUFFER, m_vertices.size()*sizeof(float), m_vertices.begin(), GL_DYNAMIC_DRAW);
             

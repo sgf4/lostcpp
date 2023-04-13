@@ -1,5 +1,5 @@
 #pragma once 
-#include "StdAfx.hpp"
+#include <memory>
 
 template<typename T>
 class Pimpl {

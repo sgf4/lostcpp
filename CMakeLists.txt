@@ -1,14 +1,12 @@
 cmake_minimum_required(VERSION 3.14)
 
 project(lostcpp VERSION 0.1)
+set(CMAKE_ECHO_COLOR "--blue")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-
 include(cmake/embed.cmake)
 include(cmake/libraries.cmake)
-
-
 include(cmake/flags.cmake)
 
 include_directories(src)

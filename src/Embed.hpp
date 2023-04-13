@@ -1,6 +1,8 @@
 #pragma once
 #include "FixedString.hpp"
-#include "StdAfx.hpp"
+#include <array>
+#include <string_view>
+#include "Integers.hpp"
 
 template<std::size_t N>
 constexpr auto ctimeXor(const u8 (&arr)[N], std::string_view password) {

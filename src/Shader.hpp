@@ -4,7 +4,7 @@
 #include "FixedString.hpp"
 #include "Pimpl.hpp"
 
-#include "StdAfx.hpp"
+#include <unordered_map>
 
 namespace GL {
 

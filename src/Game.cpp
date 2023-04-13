@@ -29,7 +29,7 @@ public:
     }
 
     GL::Shader& getShader(const char* name) {
-        return m_shaderStorage[name];
+        return m_shaderStorage.at(name);
     }
 
     void start() {

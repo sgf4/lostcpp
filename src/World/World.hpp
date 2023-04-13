@@ -3,13 +3,17 @@
 #include "../Integers.hpp"
 #include "../Game.hpp"
 #include "../Pimpl.hpp"
+#include "Camera.hpp"
 
-#include "StdAfx.hpp"
+#include <unordered_map>
 
 class World;
+inline World* current_world;
 
 class World : public Update {
     UpdateManager m_updateManager;
+    struct AddCurrent { AddCurrent(World* ptr) { current = ptr; } } m_addPtr {this};
+    Camera m_camera;
     u64 m_id;
 public:
 
@@ -17,7 +21,6 @@ public:
 
     World() {
         m_id = game->getNewId();
-        current = this;
         game->getUpdateManager().add(this);
     }
 
@@ -37,10 +40,13 @@ public:
         return m_id;
     }
 
+    auto& getCamera() {
+        return m_camera;
+    }
+
     virtual ~World() {
         game->getUpdateManager().del(this);
     }
-
 };
 
 class WorldManager {
@@ -66,10 +72,10 @@ public:
 
 struct WorldUpdate : Update {
     WorldUpdate() {
-        game->getWorldManager().getCurrentWorld().addUpdate(this);
+        current_world->addUpdate(this);
     }
 
     ~WorldUpdate() {
-        game->getWorldManager().getCurrentWorld().delUpdate(this);
+        current_world->delUpdate(this);
     }
 };
