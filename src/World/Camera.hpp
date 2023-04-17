@@ -3,11 +3,10 @@
 #include <glm/vec3.hpp>
 #include <unordered_map>
 
-#include "../Updater.hpp"
 #include "World/Transform.hpp"
 
-class Camera : public Transform, public Update {
-    float m_fov {90.f}, m_yaw {90.f}, m_pitch {};
+class Camera : public Transform {
+    float m_fov, m_yaw, m_pitch;
     bool m_control;
     glm::vec3 m_direction;
     glm::mat4 m_proj;
@@ -17,18 +16,8 @@ public:
     Camera(bool control=false);
     ~Camera();
 
-    void addShader(GL::Shader& shader) {
-        auto it = m_shaders.find(&shader);
-        if (it != m_shaders.end()) it->second++;
-        else m_shaders.insert({&shader, 1});
-    }
-
-    void delShader(GL::Shader& shader) {
-        auto it = m_shaders.find(&shader);
-        if (it != m_shaders.end()) {
-            if (--it->second) m_shaders.erase(&shader);
-        }
-    }
+    void addShader(GL::Shader& shader);
+    void delShader(GL::Shader& shader);
 
     void update();
 };

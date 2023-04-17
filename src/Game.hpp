@@ -3,8 +3,7 @@
 #include "Integers.hpp"
 
 class Window;
-class UpdateManager;
-class WorldManager;
+class World;
 
 namespace GL {
     class Shader;
@@ -17,12 +16,13 @@ public:
     Game();
     ~Game();
 
-    void start();
+    void update();
     void close();
+    
+    void addWorld(World* world);
+    void delWorld(World* world);
 
-    UpdateManager& getUpdateManager();
     Window& getWindow();
-    WorldManager& getWorldManager();
     GL::Shader& getShader(const char* name);
     u64 getNewId();
 };

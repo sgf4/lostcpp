@@ -1,33 +1,37 @@
 #pragma once 
-#include "World.hpp"
 #include "Transform.hpp"
-#include "GL.hpp"
+#include "Component.hpp"
+#include "ComponentList.hpp"
 
-class Entity : public Update, public Transform {
-    GL::Shader* m_shader {};
+class Entity {
+    std::array<std::unique_ptr<Component>, 64> m_components;
 public:
-
+    
     Entity() {
-        World::current->addUpdate(*this);
     }
 
-    Camera& getCamera() {
-        return World::current->getCamera();
+    template<typename T>
+    static consteval u8 getComponentIndex() {
+        return TupleGetIndex<T, ComponentList>;
     }
 
-    void setEntityShader(GL::Shader& shader) {
-        if (m_shader) getCamera().delShader(*m_shader);
-        World::current->getCamera().addShader(shader);
-        m_shader = &shader;
+    template<typename T, typename... Ts>
+    void addComponent(Ts&&... args) {
+        m_components[getComponentIndex<T>()] = std::make_unique<T>(std::forward<Ts>(args)...);
     }
 
-    void update() {
-        Transform::update();
-        if (m_shader) Transform::updateUniforms(*m_shader);
+    template<typename... Ts>
+    bool hasComponents() const {
+        return ((m_components[getComponentIndex<Ts>()].get() > 0) && ...);
     }
 
-    ~Entity() {
-        if (m_shader) getCamera().delShader(*m_shader);
-        World::current->delUpdate(*this);
+    virtual void update() {
+        for (auto& component : m_components) {
+            component->update();
+        }
+    }
+
+    virtual ~Entity() {
     }
 };
+

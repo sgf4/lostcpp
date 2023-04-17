@@ -12,7 +12,7 @@ add_subdirectory(glfw)
 set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
 set(ASSIMP_INJECT_DEBUG_POSTFIX OFF CACHE BOOL "" FORCE)
-# add_subdirectory(assimp)
+add_subdirectory(assimp)
 
 set(ODE_WITH_DEMOS OFF CACHE BOOL "" FORCE)
 set(ODE_WITH_TESTS OFF CACHE BOOL "" FORCE)
@@ -23,4 +23,4 @@ add_subdirectory(glm)
 
 set(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE_OLD}")
 
-set(LOSTCPP_LIBRARIES glm glfw) # assimp ODE)
+set(LOSTCPP_LIBRARIES glm glfw assimp) # ODE)

@@ -10,6 +10,6 @@
 int main() {
     Game game;
     game.getWorldManager().loadWorld<ExampleWorld>();
-    game.start();
+    game.update();
     return 0;
 }

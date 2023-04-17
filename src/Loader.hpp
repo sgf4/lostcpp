@@ -3,16 +3,16 @@
 #include "Pimpl.hpp"
 
 template<typename... Ts>
-class LoadManager {
+class Loader {
 
 public:
-    LoadManager() {
+    Loader() {
         ([] () {
             Ts::loader = new typename Ts::Loader();
         }(), ...);
     }
 
-    ~LoadManager() {
+    ~Loader() {
         (delete Ts::loader, ...);
     }
 };

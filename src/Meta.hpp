@@ -127,7 +127,7 @@ template<typename... Ts, template<typename...> typename Tmpl>
 struct TupleForwardImpl<std::tuple<Ts...>, Tmpl> : TypeIdentity<Tmpl<Ts...>> {};
 
 template<typename T, template<typename...> typename Tmpl>
-using TupleForward = TupleForwardImpl<T, Tmpl>;
+using TupleForward = typename TupleForwardImpl<T, Tmpl>::type;
 
 // Tuple forward function
 template<typename T>
@@ -137,8 +137,17 @@ constexpr decltype(auto) TupleForwardFn(auto fn) {
     }(TypeIdentity<T>{});
 }
 
-template<typename T, template<typename...> typename Tmpl>
-using TupleForward = TupleForwardImpl<T, Tmpl>;
+template<typename T, typename Tupl, u32 I=0>
+struct TupleGetIndexImpl {};
+
+template<typename T, typename... Ts, u32 I>
+struct TupleGetIndexImpl<T, std::tuple<T, Ts...>, I> : IntegralConstant<I> {};
+
+template<typename T, typename T1, typename... Ts, u32 I>
+struct TupleGetIndexImpl<T, std::tuple<T1, Ts...>, I> : TupleGetIndexImpl<T, std::tuple<Ts...>, I+1> {};
+
+template<typename T, typename Tupl>
+constexpr u32 TupleGetIndex = TupleGetIndexImpl<T, Tupl>::value;
 
 // TupleOffset
 template<typename T, typename Tupl>
