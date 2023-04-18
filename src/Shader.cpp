@@ -63,6 +63,18 @@ Shader::Shader(const char* vsource, const char* fsource) : m_vSource(vsource), m
     }
 }
 
+Shader& Shader::operator=(Shader&& other) {
+    m_program = other.m_program;
+    m_vSource = other.m_vSource;
+    m_fSource = other.m_fSource;
+    m_attributes = std::move(other.m_attributes);
+    m_uniforms = std::move(other.m_uniforms);
+    other.m_program = 0;
+    other.m_vSource = 0;
+    other.m_fSource = 0;
+    return *this;
+}
+
 Shader::~Shader() {
     glDeleteProgram(m_program);
 }

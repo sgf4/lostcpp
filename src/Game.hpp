@@ -1,5 +1,4 @@
 #pragma once
-#include "Pimpl.hpp"
 #include "Integers.hpp"
 
 class Window;
@@ -10,7 +9,7 @@ namespace GL {
 }
 
 class Game {
-    PIMPL(Game);
+    class GameImpl; std::unique_ptr<GameImpl> m_pimpl;
 
 public:
     Game();
@@ -19,7 +18,13 @@ public:
     void update();
     void close();
     
-    void addWorld(World* world);
+    World& addWorld(World* world);
+
+    template<typename T, typename... Ts>
+    World& addWorld(Ts&&... args) {
+        return addWorld(new T(std::forward<Ts>(args)...));
+    }
+
     void delWorld(World* world);
 
     Window& getWindow();

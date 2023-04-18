@@ -2,7 +2,6 @@
 #include "Embed.hpp"
 #include "Integers.hpp"
 #include "FixedString.hpp"
-#include "Pimpl.hpp"
 
 #include <unordered_map>
 
@@ -31,17 +30,7 @@ public:
         *this = std::move(other);
     }
 
-    Shader& operator=(Shader&& other) {
-        m_program = other.m_program;
-        m_vSource = other.m_vSource;
-        m_fSource = other.m_fSource;
-        m_attributes = std::move(other.m_attributes);
-        m_uniforms = std::move(other.m_uniforms);
-        other.m_program = 0;
-        other.m_vSource = 0;
-        other.m_fSource = 0;
-        return *this;
-    }
+    Shader& operator=(Shader&& other);
 
     operator u32() {
         return m_program;

@@ -9,7 +9,7 @@
 
 int main() {
     Game game;
-    game.getWorldManager().loadWorld<ExampleWorld>();
+    game.addWorld<ExampleWorld>();
     game.update();
     return 0;
 }

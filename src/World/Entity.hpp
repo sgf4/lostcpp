@@ -1,10 +1,9 @@
 #pragma once 
-#include "Transform.hpp"
 #include "Component.hpp"
 #include "ComponentList.hpp"
 
 class Entity {
-    std::array<std::unique_ptr<Component>, 64> m_components;
+    std::array<std::unique_ptr<Component>, NComponents> m_components;
 public:
     
     Entity() {
@@ -20,6 +19,11 @@ public:
         m_components[getComponentIndex<T>()] = std::make_unique<T>(std::forward<Ts>(args)...);
     }
 
+    template<typename T>
+    T& getComponent() {
+        return static_cast<T&>(*m_components[getComponentIndex<T>()]);
+    }
+
     template<typename... Ts>
     bool hasComponents() const {
         return ((m_components[getComponentIndex<Ts>()].get() > 0) && ...);
@@ -27,7 +31,7 @@ public:
 
     virtual void update() {
         for (auto& component : m_components) {
-            component->update();
+            if (component.get()) component->update();
         }
     }
 
@@ -35,3 +39,13 @@ public:
     }
 };
 
+template<typename... C>
+struct EntityWithComponents : Entity {
+    EntityWithComponents() {
+        (addComponent<C>(), ...);
+    }
+
+    virtual ~EntityWithComponents() {
+
+    }
+};

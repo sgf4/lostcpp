@@ -230,3 +230,19 @@ struct TypeSwitchImpl<T, C, Cs...> :
 
 template<typename T, IsFromTemplate<Case>... Cs>
 using TypeSwitch = typename TypeSwitchImpl<T, Cs...>::type;
+
+// Overload
+template<typename... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+
+// validexpr
+#define VALIDEXPR(...) overloaded { \
+        [] <typename = void> requires requires() { \
+            __VA_ARGS__; \
+        } () consteval { \
+            return true; \
+        }, \
+        [] <typename = void> () consteval { \
+            return false; \
+        } \
+    }() 

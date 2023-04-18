@@ -4,6 +4,7 @@
 #include "World/World.hpp"
 #include "Constructor.hpp"
 
+#include <memory>
 #include <unordered_set>
 
 Game* game;
@@ -53,10 +54,6 @@ public:
         delete world;
     }
 
-    World& getCurrentWorld() {
-        return *m_currentWorld;
-    }
-
     void close() {
         m_window.shouldClose();
     }
@@ -68,12 +65,12 @@ public:
 
     ~GameImpl() {
         for (World* world : m_worlds) {
-            delWorld(world);
+            delete world;
         }
     }
 };
 
-Game::Game() {
+Game::Game() : m_pimpl(std::make_unique<GameImpl>()) {
     game = this;
 }
 
@@ -93,8 +90,9 @@ Window& Game::getWindow() {
     return m_pimpl->m_window;
 }
 
-void Game::addWorld(World* world) {
+World& Game::addWorld(World* world) {
     m_pimpl->addWorld(world);
+    return *world;
 }
 
 void Game::delWorld(World* world) {

@@ -4,11 +4,15 @@
 #include "../Loader.hpp"
 
 class ExampleWorld : public World {
-    Loader<Triangle> m_loader;
-    Triangle m_triangle;
-    
+    EntityLoader<Triangle> m_loader;
+
 public:
+    ExampleWorld() {
+        addEntity<Triangle>();
+    }
+
     void update() {
+        m_loader.update();
         World::update();
     }
 };

@@ -1,19 +1,30 @@
 #pragma once 
 #include <tuple>
-#include "Pimpl.hpp"
+#include "Meta.hpp"
+
+#define LOADER(...) inline static struct Loader : ::Loader { __VA_ARGS__ }* loader;
 
 template<typename... Ts>
-class Loader {
+class EntityLoader {
 
 public:
-    Loader() {
+    EntityLoader() {
         ([] () {
             Ts::loader = new typename Ts::Loader();
         }(), ...);
     }
 
-    ~Loader() {
+    virtual void update() {
+        (Ts::loader->update(), ...);
+    }
+
+    ~EntityLoader() {
         (delete Ts::loader, ...);
     }
+};
+
+struct Loader {
+    virtual void update() {}
+    virtual ~Loader() {}
 };
 

@@ -1,7 +1,5 @@
 #include "World.hpp"
 
-
-
 World::World() : m_id(game->getNewId()), m_camera(true) {
     current = this;
     WINDOW.hideCursor();
@@ -16,8 +14,9 @@ void World::update() {
     }
 }
 
-void World::addEntity(Entity* e) {
+Entity& World::addEntity(Entity* e) {
     m_entities.insert(e);
+    return *e;
 }
 
 void World::delEntity(Entity* e) {
