@@ -7,7 +7,9 @@
 #include "Window.hpp"
 #include "Components/Transform.hpp"
 
-struct Triangle : EntityWithComponents<Transform> {
+#include <glm/vec3.hpp>
+
+struct Triangle : Entity {
     LOADER(
         GL::VAO vao;
         GL::VBO vbo;
@@ -40,6 +42,10 @@ struct Triangle : EntityWithComponents<Transform> {
         }
     )
 
+    Triangle(float x, float y, float z) {
+        addComponent<Transform>(glm::vec3{x, y, z});
+    }
+
     void update() {
         Entity::update();
         TRANSFORM.updateUniforms(loader->shader);
@@ -51,8 +57,8 @@ struct Triangle : EntityWithComponents<Transform> {
         glBindVertexArray(0);
         glUseProgram(0);
 
-        if (WINDOW.getKey(KEY_RIGHT)) TRANSFORM.rotation.z += 0.5;
-        if (WINDOW.getKey(KEY_LEFT)) TRANSFORM.rotation.z -= 0.5;
+        if (WINDOW.getKey(KEY_RIGHT)) TRANSFORM.rotation.z += 500 * WTIME.getDelta();
+        if (WINDOW.getKey(KEY_LEFT)) TRANSFORM.rotation.z -= 500 * WTIME.getDelta();
     }
 };
 

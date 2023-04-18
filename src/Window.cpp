@@ -73,6 +73,11 @@ Window::Window() {
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture, 0);
     assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 
+    glBindRenderbuffer(GL_RENDERBUFFER, m_depthRBO);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, RESOLUTION_WIDTH, RESOLUTION_HEIGHT);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // Default 
@@ -131,7 +136,7 @@ void Window::setVsync(bool v) {
 
 void Window::update() {
     /* Render here */
-
+    glDisable(GL_DEPTH_TEST);
 
     if (getKeyDown(KEY_F11)) {
         setFullscreen(!m_fullscreen);
@@ -164,10 +169,12 @@ void Window::update() {
     /* Poll for and process events */
     glfwPollEvents();
 
+    glEnable(GL_DEPTH_TEST);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
     glViewport(0, 0, RESOLUTION_WIDTH, RESOLUTION_HEIGHT);
     glClearColor(0.0, 0.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDepthFunc(GL_LESS);  
 
 
 //    glfwTerminate();

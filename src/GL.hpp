@@ -57,6 +57,18 @@ struct FBO : ID {
     }
 };
 
+struct RBO : ID {
+    using ID::ID;
+
+    RBO() {
+        glGenRenderbuffers(1, &m_id);
+    }
+
+    ~RBO() {
+        glDeleteRenderbuffers(1, &m_id);
+    }
+};
+
 struct Texture : ID {
     using ID::ID;
 

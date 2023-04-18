@@ -6,8 +6,8 @@
 #include <glm/vec2.hpp>
 
 #define WINDOW game->getWindow()
-#define RESOLUTION_WIDTH (160)
-#define RESOLUTION_HEIGHT (120)
+#define RESOLUTION_WIDTH (640)
+#define RESOLUTION_HEIGHT (480)
 
 #define ASPECT_RATIO_Y ((float) RESOLUTION_WIDTH/RESOLUTION_HEIGHT)
 #define ASPECT_RATIO_X ((float) RESOLUTION_HEIGHT/RESOLUTION_WIDTH)
@@ -39,6 +39,7 @@ class Window {
     GLFWInstance m_glfwInstance {*this};
     GL::Instance m_glInstance;
     GL::FBO m_fbo;
+    GL::RBO m_depthRBO;
     GL::Texture m_texture;
 
     enum KeyState : u8 {

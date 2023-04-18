@@ -8,6 +8,12 @@ static float clampRotation(float f) {
     return f;
 }
 
+Transform::Transform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) 
+: position(position), 
+  rotation(rotation), 
+  scale(scale) {
+}
+
 void Transform::update() {
     model = glm::mat4 { 1.f };
     model = glm::translate(model, position);
