@@ -246,3 +246,12 @@ template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
             return false; \
         } \
     }() 
+
+template<typename T, typename = void>
+struct IsCompleteImpl : FalseType {};
+
+template<typename T>
+struct IsCompleteImpl<T, decltype(void(sizeof(T)))> : TrueType {};
+
+template<typename T>
+constexpr bool IsComplete = IsCompleteImpl<T>::value;

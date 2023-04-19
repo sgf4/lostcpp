@@ -1,10 +1,11 @@
 #pragma once
 #include "World.hpp"
-#include "Triangle.hpp"
+#include "Entity/Triangle.hpp"
 #include "../Loader.hpp"
+#include "World/Entity/Sgf4.hpp"
 
 class ExampleWorld : public World {
-    EntityLoader<Triangle> m_loader;
+    EntityLoader<Triangle, Sgf4> m_loader;
 
 public:
     ExampleWorld() {
@@ -15,6 +16,7 @@ public:
                 }
             }
         }
+        addEntity<Sgf4>();
     }
 
     void update() {

@@ -19,13 +19,14 @@ class Game::GameImpl {
 public:
     GameImpl() {
         // Global shaders
-        loadShaderFromEmbed<"ui_box">();
-        loadShaderFromEmbed<"ui_image">();
+        loadShaderFromEmbed<"box">();
+        loadShaderFromEmbed<"texture">();
+        loadShaderFromEmbed<"texture3d", "texture">();
     }
 
-    template<FixedString str>
+    template<FixedString str1, FixedString str2 = str1, FixedString name = str1>
     GL::Shader& loadShaderFromEmbed() {
-        return m_shaderStorage.emplace(std::string(str), GL::EmbedShader<str>()).first->second;
+        return m_shaderStorage.emplace(std::string(name), GL::EmbedShader<str1, str2>()).first->second;
     }
 
     GL::Shader& getShader(const char* name) {

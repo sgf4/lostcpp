@@ -9,9 +9,20 @@ World::World() : m_id(game->getNewId()), m_camera(true) {
 void World::update() {
     m_time.update();
     m_camera.update();
-    for (auto& entity : m_entities) {
-        entity->update();
+    for (Entity* entity : m_entities) {
+        Entity::current = entity;
+        try {
+            entity->update();
+        } catch(std::string err) {
+            std::cerr << "ERROR: " << err << std::endl;
+        }
     }
+}
+
+void World::updateUniforms(GL::Shader& s) {
+    glUseProgram(s);
+    glUniform1f(s.getUniform("utime"), m_time.getElapsed());
+    glUseProgram(0);
 }
 
 Entity& World::addEntity(Entity* e) {
@@ -22,7 +33,6 @@ Entity& World::addEntity(Entity* e) {
 void World::delEntity(Entity* e) {
     m_entities.erase(e);
 }
-
 
 World::~World() {
     for (Entity* e : m_entities) {

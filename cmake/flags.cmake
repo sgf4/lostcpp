@@ -15,7 +15,7 @@ endif()
 if(UNIX)
     string(APPEND CMAKE_CXX_FLAGS_DEBUG " -fsanitize=address,undefined")
 elseif(WIN32)
-    string(APPEND CMAKE_EXE_LINKER_FLAGS " -s -static -fstack-protector")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS " -s -static -fstack-protector -mwindows")
 endif()
 
 set(CMAKE_CXX_STANDARD 20)

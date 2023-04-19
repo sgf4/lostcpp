@@ -37,9 +37,12 @@ public:
     }
 };
 
-template<FixedString str>
+template<FixedString str1, FixedString str2 = str1>
 struct EmbedShader : Shader { 
-    EmbedShader() : Shader(embed<"shaders/" + str + ".vert">.newXorInstance(), embed<"shaders/" + str + ".frag">.newXorInstance()) {}
+    EmbedShader() : Shader(
+        embed<"shaders/" + str1 + ".vert">.newXorInstance(), 
+        embed<"shaders/" + str2 + ".frag">.newXorInstance()
+    ) {}
 };
 
 }

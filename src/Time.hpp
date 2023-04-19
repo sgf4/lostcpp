@@ -8,16 +8,15 @@ class Time {
 
     float m_delta {};
     float m_nextSecond {1.f};
-    float m_elapsedSeconds {};
+    float m_elapsed {};
     
 public:
     Time() {
         m_start = std::chrono::steady_clock::now();
     }
     
-    float getElapsedSeconds() {
-        auto now = std::chrono::steady_clock::now();
-        return std::chrono::duration_cast<std::chrono::seconds>(m_start-now).count();
+    float getElapsed() {
+        return m_elapsed;
     }
 
     float getDelta() const {
@@ -26,8 +25,8 @@ public:
 
     void update() {
         float elapsedSeconds = std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::steady_clock::now()-m_start).count();
-        m_delta = m_elapsedSeconds-elapsedSeconds;
-        m_elapsedSeconds = elapsedSeconds;
+        m_delta = m_elapsed-elapsedSeconds;
+        m_elapsed = elapsedSeconds;
 
         if (elapsedSeconds >= m_nextSecond) {
             m_fps = m_frameCount;

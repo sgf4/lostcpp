@@ -3,8 +3,8 @@
 #include <glm/vec3.hpp>
 #include <unordered_map>
 
-#include "Entity.hpp"
-#include "Components/Transform.hpp"
+#include "Entity/Entity.hpp"
+#include "Component/Transform.hpp"
 
 class Camera : EntityWithComponents<Transform> {
     float m_fov, m_yaw, m_pitch;

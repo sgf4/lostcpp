@@ -4,7 +4,7 @@
 #include "Camera.hpp"
 #include "../Window.hpp"
 #include "../Time.hpp"
-#include "Entity.hpp"
+#include "Entity/Entity.hpp"
 #include "Loader.hpp"
 
 #include <unordered_set>
@@ -38,6 +38,8 @@ public:
     void delEntity(Entity* e);
 
     virtual void update();
+    void updateUniforms(GL::Shader& s);
+    
     auto getId() const { return m_id; }
     auto& getCamera() { return m_camera; }
     Time& getTime() { return m_time; }

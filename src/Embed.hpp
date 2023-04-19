@@ -37,6 +37,10 @@ public:
             return e;
         }
 
+        operator Embed&() {
+            return e;
+        }
+
         ~XorInstance() {
             e.doXor();
         }

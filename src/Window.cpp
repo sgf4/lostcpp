@@ -7,6 +7,9 @@
 //#include "updater.hpp"
 #include <GLFW/glfw3.h>
 #include <algorithm>
+#include <glm/mat3x3.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/matrix_transform_2d.hpp>
 
 //#include "time.hpp"
 //#include "text.hpp"
@@ -152,13 +155,14 @@ void Window::update() {
 
     glBindVertexArray(m_glInstance.getSquareVAO());
     glBindTexture(GL_TEXTURE_2D, m_texture);
-    auto& ui_image = game->getShader("ui_image");
-    glUseProgram(ui_image);
-    glUniform4f(ui_image.getUniform("ucolor"), 1, 1, 1, 1);
-    glUniform2f(ui_image.getUniform("uoffset"), 0, 0);
-    glUniform2f(ui_image.getUniform("usize"), 1, 1);
-    glUniform2f(ui_image.getUniform("utex_offset"), 0, 0);
-    glUniform2f(ui_image.getUniform("utex_size"), 1, 1);
+    auto& sTexture = game->getShader("texture");
+    glUseProgram(sTexture);
+    glUniform4f(sTexture.getUniform("ucolor"), 1, 1, 1, 1);
+    
+    static glm::mat3 model { 1.f };
+    glUniformMatrix3fv(sTexture.getUniform("umodel"), 1, GL_FALSE, glm::value_ptr(model));
+    glUniform2f(sTexture.getUniform("utex_offset"), 0, 0);
+    glUniform2f(sTexture.getUniform("utex_size"), 1, 1);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindVertexArray(0);
