@@ -1,7 +1,7 @@
 #include "Texture.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "HLib/stb_image.h"
+#include "HLib/stb_image.hpp"
 #include <GL.hpp>
 
 using namespace GL;
