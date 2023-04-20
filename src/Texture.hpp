@@ -12,6 +12,11 @@ class Texture {
 public:
     Texture(Embed& e);
     Texture();
+
+    Texture(Texture&& other) {
+        m_id = other.m_id;
+        other.m_id = 0;
+    }
     ~Texture();
 
     operator u32() { return m_id; }

@@ -27,6 +27,10 @@ void Transform::update() {
 
 void Transform::update(GL::Shader& s) {
     update();
+    updateUniforms(s);
+}
+
+void Transform::updateUniforms(GL::Shader& s) {
     glUseProgram(s);
     glUniformMatrix4fv(s.getUniform("umodel"), 1, GL_FALSE, glm::value_ptr(model));
     glUseProgram(0);

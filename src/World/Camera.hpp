@@ -22,4 +22,5 @@ public:
     //void updateUniforms(GL::Shader&);
     void addShader(GL::Shader&);
     void delShader(GL::Shader&);
+    void updateUniforms(GL::Shader& s);
 };

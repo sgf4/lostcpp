@@ -27,11 +27,8 @@ void Camera::update() {
     m_yaw = std::fmod(m_yaw, 360.f);
 
     for (GL::Shader* s : m_shaders) {
-        glUseProgram(*s);
-        glUniformMatrix4fv(s->getUniform("uview"), 1, GL_FALSE, glm::value_ptr(transform.model));
-        glUniformMatrix4fv(s->getUniform("uproj"), 1, GL_FALSE, glm::value_ptr(m_proj));
+        updateUniforms(*s);
     }
-    glUseProgram(0);
 
     if (!m_control) return;
 
@@ -54,6 +51,13 @@ void Camera::addShader(GL::Shader& s) {
 
 void Camera::delShader(GL::Shader& s) {
     m_shaders.erase(&s);
+}
+
+void Camera::updateUniforms(GL::Shader& s) {
+    glUseProgram(s);
+    glUniformMatrix4fv(s.getUniform("uview"), 1, GL_FALSE, glm::value_ptr(transform.model));
+    glUniformMatrix4fv(s.getUniform("uproj"), 1, GL_FALSE, glm::value_ptr(m_proj));
+    glUseProgram(0);
 }
 
 Camera::~Camera() {

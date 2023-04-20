@@ -1,6 +1,6 @@
 #pragma once 
 #include "Entity.hpp"
-#include "World/Component/Texture2D.hpp"
+#include "World/Component/Texture.hpp"
 #include "World/Component/Transform2D.hpp"
 
 
@@ -9,12 +9,13 @@
 #include "../World.hpp"
 
 struct Sgf4 : Entity {
-    GL::EmbedTexture<"sgf4"> sgf4Texture;
-    Transform2D transform {{}, {0.4, 0.4}};
-    Texture2D texture {sgf4Texture};
+    Transform transform {{-2, 2, 2}};
+    Texture texture {GL::EmbedTexture<"sgf4">()};
 
     void update() {
-        transform.rotation += 100.f * WTIME.getDelta();
-        texture.update(transform);
+        transform.rotation.y += 100.f * WTIME.getDelta();
+        transform.update();
+
+        texture.update(transform, WORLD.getCamera());
     }
 };
