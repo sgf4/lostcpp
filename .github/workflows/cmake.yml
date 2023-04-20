@@ -20,8 +20,10 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@master
+      with:
+        fetch-depth: 1
     - name: Checkout submodules
-      uses: textbook/git-checkout-submodule-action@master
+      run: git submodule update --init --recursive --depth=1
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
