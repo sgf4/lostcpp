@@ -9,18 +9,12 @@
 #include "../World.hpp"
 
 struct Sgf4 : Entity {
-    LOADER(
-        GL::EmbedTexture<"sgf4"> texture;
-    )
-
-    Sgf4() {
-        addComponent<Transform2D>(glm::vec2(0.5, 0.5), glm::vec2(0.3, 0.3), 10);
-        addComponent<Texture2D>(loader->texture);
-    }
+    GL::EmbedTexture<"sgf4"> sgf4Texture;
+    Transform2D transform {{}, {0.4, 0.4}};
+    Texture2D texture {sgf4Texture};
 
     void update() {
-        Entity::update();
-
-        TRANSFORM2D.rotation += 100.f * WTIME.getDelta();
+        transform.rotation += 100.f * WTIME.getDelta();
+        texture.update(transform);
     }
 };

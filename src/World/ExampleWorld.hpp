@@ -4,9 +4,10 @@
 #include "../Loader.hpp"
 #include "World/Entity/Sgf4.hpp"
 
-class ExampleWorld : public World {
-    EntityLoader<Triangle, Sgf4> m_loader;
-
+class ExampleWorld : public World, public Loader<
+    TriangleLoader
+> {
+    
 public:
     ExampleWorld() {
         for (int x=0; x<10; x++) {
@@ -20,7 +21,6 @@ public:
     }
 
     void update() {
-        m_loader.update();
         World::update();
     }
 };

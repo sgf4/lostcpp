@@ -10,7 +10,6 @@ void World::update() {
     m_time.update();
     m_camera.update();
     for (Entity* entity : m_entities) {
-        Entity::current = entity;
         try {
             entity->update();
         } catch(std::string err) {

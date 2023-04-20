@@ -5,7 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-Transform2D::Transform2D(Entity& e, glm::vec2 position, glm::vec2 scale, float rotation) 
+Transform2D::Transform2D(glm::vec2 position, glm::vec2 scale, float rotation) 
 : position(position),
   scale(scale),
   rotation(rotation) {
@@ -17,16 +17,16 @@ static float clampRotation(float f) {
     return f;
 }
 
-void Transform2D::update(Entity& e) {
+void Transform2D::update() {
     model = glm::mat3 { 1.f };
     model = glm::translate(model, position);
     model = glm::rotate(model, glm::radians(clampRotation(rotation)));
     model = glm::scale(model, scale);
+}
 
-    if (e.hasComponent<Shader>()) {
-        Shader& s = e.getComponent<Shader>();
-        updateUniforms(s.getShader());
-    }
+void Transform2D::update(GL::Shader& s) {
+    update();
+    updateUniforms(s);
 }
 
 void Transform2D::updateUniforms(GL::Shader& s) {

@@ -4,14 +4,12 @@
 #include <Game.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-Texture2D::Texture2D(Entity& e, GL::Texture& texture) : m_texture(&texture) {
-    e.requiredComponents<Transform2D>();
+Texture2D::Texture2D(GL::Texture& texture) : m_texture(&texture) {
 }
 
-void Texture2D::update(Entity& e) {
-    auto& t = e.getComponent<Transform2D>();
+void Texture2D::update(Transform2D& transform) {
     auto& s = game->getShader("texture");
-    t.updateUniforms(s);
+    transform.update(s);
 
     glUseProgram(s);
     glBindTexture(GL_TEXTURE_2D, *m_texture);

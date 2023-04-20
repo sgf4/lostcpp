@@ -2,29 +2,26 @@
 #include <tuple>
 #include "Meta.hpp"
 
-#define LOADER(...) inline static struct Loader : ::Loader { __VA_ARGS__ }* loader;
+template<typename T>
+inline T* loader;
+
+template<typename T>
+T* getLoader() {
+    return loader<T>;
+}
 
 template<typename... Ts>
-class EntityLoader {
+class Loader {
 
 public:
-    EntityLoader() {
-        ([] () {
-            Ts::loader = new typename Ts::Loader();
+    Loader() {
+        ([&] () {
+            loader<Ts> = new Ts();
         }(), ...);
     }
 
-    virtual void update() {
-        (Ts::loader->update(), ...);
+    ~Loader() {
+        (delete loader<Ts>, ...);
     }
-
-    ~EntityLoader() {
-        (delete Ts::loader, ...);
-    }
-};
-
-struct Loader {
-    virtual void update() {}
-    virtual ~Loader() {}
 };
 

@@ -5,6 +5,7 @@
 
 #include "../Component/Transform.hpp"
 #include "../Component/Shader.hpp"
+#include <Loader.hpp>
 
 static constexpr std::initializer_list<float> vertices {
     -0.5f,-0.5f,    1.f, 1.f, 0.f,
@@ -12,7 +13,7 @@ static constexpr std::initializer_list<float> vertices {
     0.0f,  0.5f,   1.f, 0.f, 1.f
 };
 
-Triangle::Loader::Loader() {
+TriangleLoader::TriangleLoader() {
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(float), vertices.begin(), GL_DYNAMIC_DRAW);
     
@@ -23,31 +24,27 @@ Triangle::Loader::Loader() {
     glEnableVertexAttribArray(ACOLOR);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-}
 
-void Triangle::Loader::update() {
-    CAMERA.updateUniforms(shader);
-    WORLD.updateUniforms(shader);
+    CAMERA.addShader(shader);
 }
 
 
 Triangle::Triangle(float x, float y, float z) {
-    addComponent<Transform>(glm::vec3{x, y, z});
-    addComponent<Shader>(loader->shader);
+    transform.setPosition(x, y, z);
 }
 
 void Triangle::update() {
-    Entity::update();
-
-    glBindVertexArray(loader->vao);
-    glUseProgram(loader->shader);
+    auto l = getLoader<TriangleLoader>();
+    transform.update(l->shader);
+    glBindVertexArray(l->vao);
+    glUseProgram(l->shader);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
     glBindVertexArray(0);
     glUseProgram(0);
 
-    if (WINDOW.getKey(KEY_RIGHT)) TRANSFORM.rotation.z += 500 * WTIME.getDelta();
-    if (WINDOW.getKey(KEY_LEFT)) TRANSFORM.rotation.z -= 500 * WTIME.getDelta();
-    if (WINDOW.getKey(KEY_UP)) TRANSFORM.rotation.x += 500 * WTIME.getDelta();
-    if (WINDOW.getKey(KEY_DOWN)) TRANSFORM.rotation.x -= 500 * WTIME.getDelta();
+    if (WINDOW.getKey(KEY_RIGHT)) transform.rotation.z += 500 * WTIME.getDelta();
+    if (WINDOW.getKey(KEY_LEFT)) transform.rotation.z -= 500 * WTIME.getDelta();
+    if (WINDOW.getKey(KEY_UP)) transform.rotation.x += 500 * WTIME.getDelta();
+    if (WINDOW.getKey(KEY_DOWN)) transform.rotation.x -= 500 * WTIME.getDelta();
 }
