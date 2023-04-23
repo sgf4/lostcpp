@@ -45,6 +45,5 @@ def embed(path):
             output_cpp.write(f'template<> Embed embed<"{ipath}"> {{ {name}, {name}_pw.data()}};')
 
 
-
 for path in sys.argv[1:]:
     embed(path)
