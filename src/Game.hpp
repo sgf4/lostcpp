@@ -1,5 +1,6 @@
 #pragma once
 #include "Integers.hpp"
+#include <functional>
 
 class Window;
 class World;
@@ -29,6 +30,7 @@ public:
 
     Window& getWindow();
     GL::Shader& getShader(const char* name);
+    void forEachShader(const std::function<void(GL::Shader&)>&);
     u64 getNewId();
 };
 

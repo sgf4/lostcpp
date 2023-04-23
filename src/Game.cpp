@@ -33,6 +33,12 @@ public:
         return m_shaderStorage.at(name);
     }
 
+    void forEachShader(const std::function<void(GL::Shader&)>& fn) {
+        for (auto& [name, shader] : m_shaderStorage) {
+            fn(shader);
+        }
+    }
+
     void update() {
         while (!m_window.shouldClose()) {
             m_window.update();
@@ -102,6 +108,10 @@ void Game::delWorld(World* world) {
 
 GL::Shader& Game::getShader(const char* name) {
     return m_pimpl->getShader(name);
+}
+
+void Game::forEachShader(const std::function<void(GL::Shader&)>& fn) {
+    m_pimpl->forEachShader(fn);
 }
 
 Game::~Game() {

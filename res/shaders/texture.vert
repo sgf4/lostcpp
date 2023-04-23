@@ -2,6 +2,7 @@
 layout (location = 0) in vec2 apos;
 
 uniform mat3 umodel;
+uniform vec2 uwsize;
 
 out vec2 tex_coord;
 

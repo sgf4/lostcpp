@@ -1,25 +1,11 @@
 
-# Create empty output file
+message("Embedding files...")
 
-set(output "build/embeds.cpp")
-file(WRITE ${output} "#include <Embed.hpp>\n")
-# Collect input files
-file(GLOB_RECURSE embeds res/*)
-# Iterate through input files
-foreach(fpath ${embeds})
-    # Get short filename
-    string(REPLACE ${CMAKE_SOURCE_DIR}/res/ "" fname ${fpath})
-    # string(REGEX MATCH "res/+$" fname ${fpath})
-    # Replace filename spaces & extension separator for C compatibility
-    string(REGEX REPLACE "\\.| |-|\/" "_" fname_c ${fname})
-    # Read hex data from file
-    file(READ ${fpath} filedata HEX)
+find_package(Python3 REQUIRED)
 
-    string(LENGTH "${filedata}" filedata_length)
-    math(EXPR filedata_length "${filedata_length}/2+1")
+set(EMBED_SCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed.py")
+file(GLOB_RECURSE EMBED_FILES res/*)
 
-    # Convert hex data for C compatibility
-    string(REGEX REPLACE "([0-9a-f][0-9a-f])" "0x\\1," filedata ${filedata})
-    # Append data to output file
-    file(APPEND ${output} "auto ${fname_c}_data {ctimeXor({${filedata} 0x00}, \"${fname}\")}; template<> Embed embed<\"${fname}\"> { ${fname_c}_data, \"${fname}\"};\n")
-endforeach()
+execute_process(
+    COMMAND ${Python3_EXECUTABLE} ${EMBED_SCRIPT} ${EMBED_FILES}
+)

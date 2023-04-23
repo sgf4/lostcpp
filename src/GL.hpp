@@ -2,7 +2,6 @@
 #include "Integers.hpp"
 #include "Glad.hpp"
 #include "Shader.hpp"
-#include "Texture.hpp"
 
 // void gl_task_queue_runtasks(void);
 // void gl_task_queue_execute(void (*fn) (void*), void* arg);
@@ -10,15 +9,15 @@
 namespace GL {
 
 struct ID {
-    u32 m_id;
-    ID(u32 id = 0) : m_id(id) {}
+    u32 id;
+    ID(u32 id = 0) : id(id) {}
 
     operator u32() const {
-        return m_id;
+        return id;
     }
 
     auto operator&() {
-        return &m_id;
+        return &id;
     }
 };
 
@@ -26,11 +25,11 @@ struct VAO : ID {
     using ID::ID;
 
     VAO() {
-        glGenVertexArrays(1, &m_id);
+        glGenVertexArrays(1, &id);
     }
 
     ~VAO() {
-        glDeleteVertexArrays(1, &m_id);
+        glDeleteVertexArrays(1, &id);
     }
 };
 
@@ -38,11 +37,11 @@ struct VBO : ID {
     using ID::ID;
 
     VBO() {
-        glGenBuffers(1, &m_id);
+        glGenBuffers(1, &id);
     }
 
     ~VBO() {
-        glDeleteBuffers(1, &m_id);
+        glDeleteBuffers(1, &id);
     }
 };
 
@@ -50,11 +49,11 @@ struct FBO : ID {
     using ID::ID;
 
     FBO() {
-        glGenFramebuffers(1, &m_id);
+        glGenFramebuffers(1, &id);
     }
 
     ~FBO() {
-        glDeleteFramebuffers(1, &m_id);
+        glDeleteFramebuffers(1, &id);
     }
 };
 
@@ -62,11 +61,23 @@ struct RBO : ID {
     using ID::ID;
 
     RBO() {
-        glGenRenderbuffers(1, &m_id);
+        glGenRenderbuffers(1, &id);
     }
 
     ~RBO() {
-        glDeleteRenderbuffers(1, &m_id);
+        glDeleteRenderbuffers(1, &id);
+    }
+};
+
+struct Texture : ID {
+    using ID::ID;
+
+    Texture() {
+        glGenTextures(1, &id);
+    }
+
+    ~Texture() {
+        glDeleteTextures(1, &id);
     }
 };
 

@@ -84,7 +84,7 @@ Window::Window() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // Default 
-    glfwSwapInterval(0);
+    glfwSwapInterval(1);
 
 
     // Input
@@ -113,6 +113,10 @@ void Window::onResize(int w, int h) {
         m_height = w*ASPECT_RATIO_X;
         m_offsetY = (h-m_height)/2;
     }
+
+    game->forEachShader([&] (GL::Shader& s) {
+        glUniform2f(s.getUniform("uwsize"), m_width, m_height);
+    });
 }
 
 

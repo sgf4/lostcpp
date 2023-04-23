@@ -4,12 +4,17 @@
 using namespace GL;
 
 Shader::Shader() {}
-Shader::Shader(const char* vsource, const char* fsource) : m_vSource(vsource), m_fSource(fsource) {
+Shader::Shader(const Embed& vsource, const Embed& fsource) {
     m_program = glCreateProgram();
     u32 m_vs = glCreateShader(GL_VERTEX_SHADER);
     u32 m_fs = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(m_vs, 1, &m_vSource, 0);
-    glShaderSource(m_fs, 1, &m_fSource, 0);
+    
+    const char* arrvsource[] { (const char*)vsource.data() };
+    int arrvsourcesize[] { (int) vsource.size() };
+    const char* arrfsource[] { (const char*)fsource.data() };
+    int arrfsourcesize[] { (int) fsource.size() };
+    glShaderSource(m_vs, 1, arrvsource, arrvsourcesize);
+    glShaderSource(m_fs, 1, arrfsource, arrfsourcesize);
     glCompileShader(m_vs);
     glCompileShader(m_fs);
 
@@ -19,14 +24,12 @@ Shader::Shader(const char* vsource, const char* fsource) : m_vSource(vsource), m
     glGetShaderiv(m_vs, GL_COMPILE_STATUS, &success);
     if(!success) {
         glGetShaderInfoLog(m_vs, 512, 0, infoLog);
-        printf("vsource: %s\n", vsource);
         fprintf(stderr, "Error compiling vertex shader: %s\n", infoLog);
     }
 
     glGetShaderiv(m_fs, GL_COMPILE_STATUS, &success);
     if(!success) {
         glGetShaderInfoLog(m_fs, 512, 0, infoLog);
-        printf("fsource: %s\n", fsource);
         fprintf(stderr, "Error compiling fragment shader %s\n", infoLog);
     }
 
@@ -65,13 +68,9 @@ Shader::Shader(const char* vsource, const char* fsource) : m_vSource(vsource), m
 
 Shader& Shader::operator=(Shader&& other) {
     m_program = other.m_program;
-    m_vSource = other.m_vSource;
-    m_fSource = other.m_fSource;
     m_attributes = std::move(other.m_attributes);
     m_uniforms = std::move(other.m_uniforms);
     other.m_program = 0;
-    other.m_vSource = 0;
-    other.m_fSource = 0;
     return *this;
 }
 

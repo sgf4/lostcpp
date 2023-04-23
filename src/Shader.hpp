@@ -1,5 +1,5 @@
 #pragma once
-#include "Embed.hpp"
+#include "Embed/Embed.hpp"
 #include "Integers.hpp"
 #include "FixedString.hpp"
 
@@ -9,14 +9,12 @@ namespace GL {
 
 class Shader {
     u32 m_program {};
-    const char* m_vSource;
-    const char* m_fSource;
     std::unordered_map<std::string, u32> m_attributes;
     std::unordered_map<std::string, u32> m_uniforms;
 
 public:
     Shader();
-    Shader(const char* vsource, const char* fsource);
+    Shader(const Embed& vsource, const Embed& fsource);
     ~Shader();
 
     u32 getAttrib(const char* name) {

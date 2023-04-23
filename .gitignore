@@ -1,3 +1,5 @@
 build/
 .cache
 .vscode
+src/Embed/*
+!src/Embed/Embed.hpp

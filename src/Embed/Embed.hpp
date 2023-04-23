@@ -4,15 +4,6 @@
 #include <string_view>
 #include "Integers.hpp"
 
-template<std::size_t N>
-constexpr auto ctimeXor(const u8 (&arr)[N], std::string_view password) {
-    std::array<u8, N> result; 
-    for (std::size_t i=0; i<N; i++) {
-        result[i] = arr[i] ^ password[i % password.size()];
-    }
-    return result;
-}
-
 class Embed {
     u8* m_data;
     std::size_t m_size;
@@ -20,7 +11,7 @@ class Embed {
 
 public:
     template<std::size_t N>
-    Embed(std::array<u8, N>& data, std::string_view password) : m_data(data.data()), m_size(data.size()), m_password(password) {}
+    Embed(u8 (&data)[N], std::string_view password) : m_data(data), m_size(N), m_password(password) {}
 
     class XorInstance {
         Embed& e;
@@ -71,7 +62,7 @@ public:
     }
 
     auto size() const {
-        return m_size-1;
+        return m_size;
     }
 
 
@@ -79,3 +70,8 @@ public:
 
 template<FixedString str>
 extern Embed embed;
+
+template<FixedString str>
+Embed::XorInstance getEmbed() {
+    return embed<str>.newXorInstance();
+}

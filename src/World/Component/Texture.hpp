@@ -8,12 +8,22 @@
 
 class Texture {
     GL::Texture m_texture;
+    u32 m_width;
+    u32 m_height;
 
-    void draw(GL::Shader& s);
 public:
-    Texture(GL::Texture texture);
 
-    void update(Transform2D& transform);
-    void update(Transform& transform, Camera& camera);
-    void update(Transform& transform);
+    enum Fit : u8 {
+        SCALE,
+        COVER,
+        CONTAIN
+    };
+
+    Texture(const Embed& e);
+    
+    void draw(GL::Shader& s, Fit fit);
+    void draw(Transform2D& transform, Fit fit = COVER);
+    void draw(Transform& transform, Camera& camera, Fit fit = COVER);
+    u32 getWidth() const { return m_width; }
+    u32 getHeight() const { return m_height; }
 };

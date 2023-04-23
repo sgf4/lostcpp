@@ -19,4 +19,5 @@
 #include <glm/mat4x4.hpp>
 #include <glm/mat3x3.hpp>
 #include <type_traits>
+#include <functional>
 #include "Integers.hpp"
