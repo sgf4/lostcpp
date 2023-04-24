@@ -7,9 +7,6 @@
 //#include "updater.hpp"
 #include <GLFW/glfw3.h>
 #include <algorithm>
-#include <glm/mat3x3.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/matrix_transform_2d.hpp>
 
 //#include "time.hpp"
 //#include "text.hpp"
@@ -40,7 +37,7 @@ GLFWInstance::GLFWInstance(Window& w) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    m_glfw = glfwCreateWindow(w.getWidth(), w.getHeight(), w.getTitle(), NULL, NULL);
+    m_glfw = glfwCreateWindow(w.getResolution().x, w.getResolution().y, w.getTitle(), NULL, NULL);
     assert(m_glfw);
 
     glfwMakeContextCurrent(m_glfw);
@@ -70,14 +67,14 @@ Window::Window() {
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
 
     glBindTexture(GL_TEXTURE_2D, m_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, RESOLUTION_WIDTH, RESOLUTION_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_resolution.x, m_resolution.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture, 0);
     assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 
     glBindRenderbuffer(GL_RENDERBUFFER, m_depthRBO);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, RESOLUTION_WIDTH, RESOLUTION_HEIGHT);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_resolution.x, m_resolution.y);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRBO);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
@@ -85,7 +82,6 @@ Window::Window() {
 
     // Default 
     glfwSwapInterval(1);
-
 
     // Input
     glfwSetKeyCallback(m_glfwInstance, [] (GLFWwindow *window, int key, int scancode, int action, int mods) {
@@ -97,26 +93,28 @@ Window::Window() {
     // glfwSetMouseButtonCallback(m_glfwInstance, mouse_button_callback);
 }
 
+void Window::updateUniforms(GL::Shader& s) {
+    glUseProgram(s);
+    glUniform2f(s.getUniform("uwsize"), m_resolution.x, m_resolution.y);
+    glUseProgram(0);
+}
+
 void Window::onResize(int w, int h) {
-    m_width = w;
-    m_height = h;
+    m_size.x = w;
+    m_size.y = h;
     
-    m_offsetX = 0;
-    m_offsetY = 0;
+    m_offset.x = 0;
+    m_offset.y = 0;
 
-    if ((float)w / h > ASPECT_RATIO_Y) {
-        m_width = h*ASPECT_RATIO_Y;
-        m_height = h;
-        m_offsetX = (w-m_width)/2;
+    if ((float)w / h > (float)m_resolution.x/m_resolution.y) {
+        m_size.x = h*m_resolution.x/m_resolution.y;
+        m_size.y = h;
+        m_offset.x = (w-m_size.x)/2;
     } else {
-        m_width = w;
-        m_height = w*ASPECT_RATIO_X;
-        m_offsetY = (h-m_height)/2;
+        m_size.x = w;
+        m_size.y = w*m_resolution.y/m_resolution.x;
+        m_offset.y = (h-m_size.y)/2;
     }
-
-    game->forEachShader([&] (GL::Shader& s) {
-        glUniform2f(s.getUniform("uwsize"), m_width, m_height);
-    });
 }
 
 
@@ -150,25 +148,19 @@ void Window::update() {
     }
     
     show_fps();
-
+    
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     //glViewport(0, 0, m_width, m_height);
-    glViewport(m_offsetX, m_offsetY, m_width, m_height);
+    glViewport(m_offset.x, m_offset.y, m_size.x, m_size.y);
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glBindVertexArray(m_glInstance.getSquareVAO());
     glBindTexture(GL_TEXTURE_2D, m_texture);
-    auto& sTexture = game->getShader("texture");
-    glUseProgram(sTexture);
-    glUniform4f(sTexture.getUniform("ucolor"), 1, 1, 1, 1);
-    
-    static glm::mat3 model { 1.f };
-    glUniformMatrix3fv(sTexture.getUniform("umodel"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniform2f(sTexture.getUniform("utex_offset"), 0, 0);
-    glUniform2f(sTexture.getUniform("utex_size"), 1, 1);
+    glUseProgram(m_fboShader);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     glBindTexture(GL_TEXTURE_2D, 0);
+    glUseProgram(0);
     glBindVertexArray(0);
 
     /* Swap front and back buffers */
@@ -179,11 +171,10 @@ void Window::update() {
 
     glEnable(GL_DEPTH_TEST);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
-    glViewport(0, 0, RESOLUTION_WIDTH, RESOLUTION_HEIGHT);
+    glViewport(0, 0, m_resolution.x, m_resolution.y);
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glDepthFunc(GL_LESS);  
-
+    glDepthFunc(GL_LESS);
 
 //    glfwTerminate();
 }

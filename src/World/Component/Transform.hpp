@@ -4,8 +4,6 @@
 #include <GL.hpp>
 #include <glm/vec3.hpp>
 
-#define TRANSFORM getComponent<Transform>()
-
 class Transform {
 public:
     glm::mat4 model { 1.f };

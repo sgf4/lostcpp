@@ -4,8 +4,6 @@
 #include <glm/vec2.hpp>
 #include <GL.hpp>
 
-#define TRANSFORM2D getComponent<Transform2D>()
-
 class Transform2D {
 public:
     Transform2D(glm::vec2 position = {0, 0}, glm::vec2 scale = {1, 1}, float rotation = 0);

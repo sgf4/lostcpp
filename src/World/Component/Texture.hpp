@@ -13,17 +13,29 @@ class Texture {
 
 public:
 
-    enum Fit : u8 {
-        SCALE,
-        COVER,
-        CONTAIN
+    // enum Fit : u8 {
+    //     SCALE,
+    //     COVER,
+    //     CONTAIN
+    // };
+
+    enum Align2D : u8 {
+        TOP_LEFT,
+        TOP_CENTERED,
+        TOP_RIGHT,
+
+        MIDDLE_LEFT,
+        MIDDLE_CENTERED,
+        MIDDLE_RIGHT,
+
+        BOTTOM_LEFT,
+        BOTTOM_CENTERED,
     };
 
     Texture(const Embed& e);
     
-    void draw(GL::Shader& s, Fit fit);
-    void draw(Transform2D& transform, Fit fit = COVER);
-    void draw(Transform& transform, Camera& camera, Fit fit = COVER);
+    void draw(Transform2D& transform, Align2D align = MIDDLE_CENTERED);
+    void draw(Transform& transform, Camera& camera);
     u32 getWidth() const { return m_width; }
     u32 getHeight() const { return m_height; }
 };

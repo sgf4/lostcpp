@@ -1,6 +1,7 @@
 #include "Texture.hpp"
 #include <Game.hpp>
 #include <HLib/stb_image.hpp>
+#include <Window.hpp>
 
 Texture::Texture(const Embed& e) {
     int c;
@@ -41,22 +42,22 @@ Texture::Texture(const Embed& e) {
     stbi_image_free(data);
 }
 
-void Texture::draw(GL::Shader& s, Fit fit) {
+
+void Texture::draw(Transform2D& transform, Align2D align) {
+    auto& s = game->getShader("texture");
+    transform.updateUniforms(s);
+
+    // switch (align) {
+    //     case TOP_LEFT:era& camera);
+    //         break;
+
+    //     default:
+    //         break;
+    // }
+
     glUseProgram(s);
     glBindTexture(GL_TEXTURE_2D, m_texture);
-
-    switch (fit) {
-        case SCALE:
-            glUniform2f(s.getUniform("ufit"), 1, 1);
-            break;
-        case COVER:
-            glUniform2f(s.getUniform("ufit"), 1, (float)m_height/m_width);
-            break;
-        case CONTAIN:
-            glUniform2f(s.getUniform("ufit"), (float)m_width/m_height, 1);
-            break;
-    }
-
+    glUniform2f(s.getUniform("ufit"), (float)m_width/WINDOW_RX, (float)m_height/WINDOW_RY);
     glUniform2f(s.getUniform("utex_offset"), 0, 0);
     glUniform2f(s.getUniform("utex_size"), 1, 1);
     glUniform4f(s.getUniform("ucolor"), 1, 1, 1, 1);
@@ -66,17 +67,19 @@ void Texture::draw(GL::Shader& s, Fit fit) {
     glUseProgram(0);
 }
 
-void Texture::draw(Transform2D& transform, Fit fit) {
-    auto& s = game->getShader("texture");
-    transform.updateUniforms(s);
-
-    draw(s, fit);
-}
-
-void Texture::draw(Transform& transform, Camera& camera, Fit fit) {
+void Texture::draw(Transform& transform, Camera& camera) {
     auto& s = game->getShader("texture3d");
     transform.updateUniforms(s);
     camera.updateUniforms(s);
     
-    draw(s, fit);
+    glUseProgram(s);
+    glBindTexture(GL_TEXTURE_2D, m_texture);
+    glUniform2f(s.getUniform("ufit"), (float)m_width/m_height, (float)1.0);
+    glUniform2f(s.getUniform("utex_offset"), 0, 0);
+    glUniform2f(s.getUniform("utex_size"), 1, 1);
+    glUniform4f(s.getUniform("ucolor"), 1, 1, 1, 1);
+    glBindVertexArray(GL::instance->getSquareVAO());
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    glBindVertexArray(0);
+    glUseProgram(0);
 }

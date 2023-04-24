@@ -6,11 +6,8 @@
 #include <glm/vec2.hpp>
 
 #define WINDOW game->getWindow()
-#define RESOLUTION_WIDTH (640)
-#define RESOLUTION_HEIGHT (480)
-
-#define ASPECT_RATIO_Y ((float) RESOLUTION_WIDTH/RESOLUTION_HEIGHT)
-#define ASPECT_RATIO_X ((float) RESOLUTION_HEIGHT/RESOLUTION_WIDTH)
+#define WINDOW_RX WINDOW.getResolution().x
+#define WINDOW_RY WINDOW.getResolution().y
 
 struct GLFWwindow;
 extern "C" int glfwWindowShouldClose(GLFWwindow*);
@@ -29,15 +26,16 @@ struct GLFWInstance {
 };
 
 class Window {
-    int m_width {640}, m_height {480}, m_offsetX {}, m_offsetY {};
+    glm::uvec2 m_resolution {640, 480}, m_offset, m_size;
+
     const char* m_title {"omg"};
     bool m_vsync {true}, m_fullscreen {false}, m_cursorIshiden {false};
     
-    glm::vec2 m_mouseDirection {};
-    glm::vec2 m_mousePosition {};
+    glm::vec2 m_mouseDirection {}, m_mousePosition {};
 
     GLFWInstance m_glfwInstance {*this};
     GL::Instance m_glInstance;
+    GL::EmbedShader<"main_fbo"> m_fboShader;
     GL::FBO m_fbo;
     GL::RBO m_depthRBO;
     GL::Texture m_texture;
@@ -64,11 +62,16 @@ public:
     void setVsync(bool);
     void onResize(int w, int h);
     
+    void updateUniforms(GL::Shader& s);
     bool shouldClose() { return glfwWindowShouldClose(m_glfwInstance); }
     GLFWInstance& getGlfwInstance() { return m_glfwInstance; }
-    auto getWidth() const { return m_width; }
-    auto getHeight() const { return m_height; }
+    auto getSize() const { return m_size; }
+    auto getResolution() const { return m_resolution; }
     auto getTitle() const { return m_title; }
+
+    float getResolutionRatio() {
+        return (float)m_resolution.x/m_resolution.y;
+    }
 
     KeyState getKeyState(Key key) const;
     void setKeyState(Key key, KeyState value);

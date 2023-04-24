@@ -23,7 +23,7 @@ void Camera::update() {
     transform.model = glm::lookAt(transform.position, transform.position - m_direction, {0.0, 1.0, 0.0});
 
     // set projection
-    m_proj = glm::perspective(glm::radians(m_fov), (float)ASPECT_RATIO_Y, 0.01f, 10000.0f);
+    m_proj = glm::perspective(glm::radians(m_fov), (float)WINDOW.getResolutionRatio(), 0.01f, 10000.0f);
     m_yaw = std::fmod(m_yaw, 360.f);
 
     for (GL::Shader* s : m_shaders) {

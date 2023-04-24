@@ -9,7 +9,11 @@ namespace GL {
     class Shader;
 }
 
+class Game;
+extern Game* game;
+
 class Game {
+    struct AssignPtr { AssignPtr(Game* g) { game = g; } } assignPtr { this };
     class GameImpl; std::unique_ptr<GameImpl> m_pimpl;
 
 public:
@@ -34,4 +38,3 @@ public:
     u64 getNewId();
 };
 
-extern Game* game;

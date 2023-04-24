@@ -4,6 +4,7 @@
 #include "FixedString.hpp"
 
 #include <unordered_map>
+#include <unordered_set>
 
 namespace GL {
 
@@ -11,11 +12,18 @@ class Shader {
     u32 m_program {};
     std::unordered_map<std::string, u32> m_attributes;
     std::unordered_map<std::string, u32> m_uniforms;
+    static std::unordered_set<GL::Shader*> m_shaders;
 
 public:
     Shader();
     Shader(const Embed& vsource, const Embed& fsource);
     ~Shader();
+
+    static void forEachAll(const auto& fn) {
+        for (auto shader : m_shaders) {
+            fn(*shader);
+        }
+    }
 
     u32 getAttrib(const char* name) {
         return m_attributes[name];

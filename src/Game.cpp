@@ -78,7 +78,6 @@ public:
 };
 
 Game::Game() : m_pimpl(std::make_unique<GameImpl>()) {
-    game = this;
 }
 
 void Game::update() {

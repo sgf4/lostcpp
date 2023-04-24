@@ -12,7 +12,7 @@ Transform2D::Transform2D(glm::vec2 position, glm::vec2 scale, float rotation)
 
 }
 
-static float clampRotation(float f) {
+static float clampRotation(float& f) {
     f -= 360 * (int)(f/180);
     return f;
 }
