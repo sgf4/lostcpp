@@ -12,24 +12,17 @@
 #include <Embed/Embed.hpp>
 
 struct Sgf4Loader {
-    Texture texture_cat {getEmbed<"cat.jpg">()};
-    Texture texture_sgf4 {getEmbed<"sgf4.png">()};
+    GL::Texture texture_cat {getEmbed<"cat.jpg">()};
+    GL::Texture texture_sgf4 {getEmbed<"sgf4.png">()};
 };
 
-struct Sgf4 : Entity {
-    Transform transform;
-    Transform2D transform2d;
+struct Sgf4 : Entity, Transform, Texture {
 
-    Sgf4(float x, float y, float z) {
-        transform2d.scale = {0.3, 0.3};
-        transform2d.position = {1-(599.f/WINDOW_RX*0.3), 1-(599.f/WINDOW_RY*0.3)};
+    Sgf4(float x, float y, float z) : Texture(getLoader<Sgf4Loader>().texture_cat) {
+        scale = {1, 1, 1};
     }
 
     void update() {
-        auto l = getLoader<Sgf4Loader>();
-        transform.update();
-        transform2d.update();
-        l->texture_cat.draw(transform, WORLD.getCamera());
-        l->texture_sgf4.draw(transform2d);
+        Texture::update(*this);
     }
 };

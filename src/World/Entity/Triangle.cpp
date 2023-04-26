@@ -34,10 +34,10 @@ Triangle::Triangle(float x, float y, float z) {
 }
 
 void Triangle::update() {
-    auto l = getLoader<TriangleLoader>();
-    transform.update(l->shader);
-    glBindVertexArray(l->vao);
-    glUseProgram(l->shader);
+    auto& l = getLoader<TriangleLoader>();
+    transform.update(l.shader);
+    glBindVertexArray(l.vao);
+    glUseProgram(l.shader);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
     glBindVertexArray(0);

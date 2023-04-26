@@ -2,6 +2,7 @@
 #include "Integers.hpp"
 #include "Glad.hpp"
 #include "Shader.hpp"
+#include "Texture.hpp"
 
 // void gl_task_queue_runtasks(void);
 // void gl_task_queue_execute(void (*fn) (void*), void* arg);
@@ -66,18 +67,6 @@ struct RBO : ID {
 
     ~RBO() {
         glDeleteRenderbuffers(1, &id);
-    }
-};
-
-struct Texture : ID {
-    using ID::ID;
-
-    Texture() {
-        glGenTextures(1, &id);
-    }
-
-    ~Texture() {
-        glDeleteTextures(1, &id);
     }
 };
 

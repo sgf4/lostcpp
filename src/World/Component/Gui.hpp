@@ -5,9 +5,21 @@
 #include <glm/vec2.hpp>
 #include <GL.hpp>
 
-class Gui {
-    Transform2D transform;
+class Gui : Transform2D {
 public:
+
+    enum Align2D : u8 {
+        TOP_LEFT,
+        TOP_CENTERED,
+        TOP_RIGHT,
+
+        MIDDLE_LEFT,
+        MIDDLE_CENTERED,
+        MIDDLE_RIGHT,
+
+        BOTTOM_LEFT,
+        BOTTOM_CENTERED,
+    };
 
     Gui();
 

@@ -6,8 +6,8 @@ template<typename T>
 inline T* loader;
 
 template<typename T>
-T* getLoader() {
-    return loader<T>;
+T& getLoader() {
+    return *loader<T>;
 }
 
 template<typename... Ts>

@@ -4,7 +4,7 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-static float clampRotation(float f) {
+static float clampRotation(float& f) {
     f -= 360 * (int)(f/180);
     return f;
 }
