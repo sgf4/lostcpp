@@ -1,5 +1,4 @@
 #pragma once
-#include "../Loader.hpp"
 #include "World.hpp"
 #include "Entity.hpp"
 #include "Component/Component.hpp"

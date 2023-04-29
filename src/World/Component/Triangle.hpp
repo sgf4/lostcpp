@@ -2,7 +2,7 @@
 #include "GL.hpp"
 #include "Transform.hpp"
 
-struct TriangleLoader {
+struct TriangleLoader : Component::Loader {
     GL::VAO vao;
     GL::VBO vbo;
     GL::EmbedShader<"triangle"> shader;
@@ -12,11 +12,13 @@ struct TriangleLoader {
         ACOLOR
     };
     
-    TriangleLoader();
+    TriangleLoader() {}
 };
 
 class Triangle : public Component {
 public:
+    using Loader = TriangleLoader;
+
     void update() {}
 };
 

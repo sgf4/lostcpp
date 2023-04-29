@@ -17,6 +17,10 @@ constexpr u32 NComponents = std::tuple_size_v<ComponentList>;
 
 class Entity;
 struct Component {
+    struct Loader {
+        virtual ~Loader() {}
+    };
+
     u32 eId;
 
     void init() {}
@@ -28,7 +32,6 @@ struct Component {
     }
 };
 
-
 class ComponentManager {
     std::bitset<NComponents> m_loadedMask;
 
@@ -39,6 +42,7 @@ class ComponentManager {
     using MultiPool = std::tuple<Pool<Ts>...>;
 
     TupleForward<ComponentList, MultiPool> m_pool;
+    std::array<std::unique_ptr<Component::Loader>, NComponents> m_loaders;
 public:
 
     ComponentManager();

@@ -31,6 +31,12 @@ void ComponentManager::load() {
     auto& uniq = std::get<Pool<T>>(m_pool);
     uniq = std::make_unique<std::vector<T>>();
     uniq->reserve(32);
+
+    using ComponentLoader = typename T::Loader;
+    if constexpr (!std::is_same_v<ComponentLoader, Component::Loader>) {
+        std::unique_ptr<Component::Loader>& loader = m_loaders[getId<T>()];
+        if (!loader.get()) loader = std::make_unique<ComponentLoader>();
+    }
 }
 
 template<typename T>
@@ -38,6 +44,8 @@ void ComponentManager::unload() {
     m_loadedMask.reset(getId<T>());
     auto& uniq = std::get<Pool<T>>(m_pool);
     uniq.reset();
+
+
 }
 
 template<typename T>
