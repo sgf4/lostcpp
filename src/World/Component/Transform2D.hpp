@@ -1,10 +1,10 @@
 #pragma once 
-//#include "Component.hpp"
+#include "Component.hpp"
 
 #include <glm/vec2.hpp>
 #include <GL.hpp>
 
-class Transform2D {
+class Transform2D : public Component {
 public:
     Transform2D(glm::vec2 position = {0, 0}, glm::vec2 scale = {1, 1}, float rotation = 0);
 

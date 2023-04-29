@@ -8,7 +8,8 @@
 #define CAMERA WORLD.getCamera()
 #define WTIME WORLD.getTime()
 
-struct ComponentManager;
+class ComponentManager;
+
 class Entity;
 class World {
     u64 m_id;
@@ -25,13 +26,12 @@ public:
     virtual ~World();
 
     Entity& addEntity();
-    
     Entity& getEntity(u32 id);
 
     virtual void init() {}
     virtual void update() {}
 
-    void updateEntities();
+    void updateWorld();
     void updateUniforms(GL::Shader& s);
     ComponentManager& getComponentManager() { return *m_componentManager; }
     

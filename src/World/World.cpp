@@ -8,16 +8,9 @@ World::World() {
 }
 
 
-void World::updateEntities() {
+void World::updateWorld() {
     current = this;
     m_time.update();
-    for (Entity& entity : m_entities) {
-        try {
-            entity.update();
-        } catch(std::string err) {
-            std::cerr << "ERROR: " << err << std::endl;
-        }
-    }
 }
 
 Entity& World::addEntity() {

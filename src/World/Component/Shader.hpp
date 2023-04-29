@@ -1,7 +1,8 @@
 #pragma once 
+#include "Component.hpp"
 #include <GL.hpp>
 
-class Shader {
+class Shader : public Component {
     
 public:
     void update() {}

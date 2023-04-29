@@ -1,10 +1,11 @@
 #pragma once
 #include <GL.hpp>
 #include <glm/vec3.hpp>
+#include "Component.hpp"
 
 #define TRANSFORM ENTITY.getComponent<Transform>()
 
-class Transform {
+class Transform : public Component {
 public:
     glm::mat4 model { 1.f };
     glm::vec3 position;

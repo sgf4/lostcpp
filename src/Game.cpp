@@ -45,7 +45,7 @@ public:
             
             // Update worlds
             for (World* world : m_worlds) {
-                world->updateEntities();
+                world->updateWorld();
                 world->update();
             }
         }

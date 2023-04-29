@@ -3,7 +3,7 @@
 #include "Transform2D.hpp"
 #include "Transform.hpp"
 
-class Texture {
+class Texture : public Component {
 public:
     void update() {}
 //     GL::Texture* m_texture;

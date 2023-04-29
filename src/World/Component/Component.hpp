@@ -17,12 +17,14 @@ constexpr u32 NComponents = std::tuple_size_v<ComponentList>;
 
 class Entity;
 struct Component {
-    u32 id;
+    u32 eId;
 
-    Component(u32 eId) : id(eId) {}
+    void init() {}
+    void update() {}
+    void destroy() {}
 
     Entity& getEntity() {
-        return WORLD.getEntity(id);
+        return WORLD.getEntity(eId);
     }
 };
 
@@ -36,49 +38,41 @@ class ComponentManager {
     template<typename... Ts>
     using MultiPool = std::tuple<Pool<Ts>...>;
 
-    TupleForward<ComponentList, MultiPool> m_componentPool;
+    TupleForward<ComponentList, MultiPool> m_pool;
 public:
 
     ComponentManager();
     ~ComponentManager();
     
     template<typename T>
-    static consteval u32 getComponentId() {
+    static consteval u32 getId() {
         return TupleGetIndex<T, ComponentList>;
     }
 
     template<typename T>
-    void loadComponent() {
-        m_loadedMask.set(getComponentId<T>());
-        
-        auto& uniq = std::get<Pool<T>>(m_componentPool);
-        uniq = std::make_unique<std::vector<T>>();
-        uniq->reserve(32);
+    void load();
+
+    template<typename T>
+    void unload();
+
+    template<typename T>
+    Entity& getEntity(u32 id);
+
+    template<typename... Ts>
+    bool isLoaded() {
+        return (m_loadedMask[getId<Ts>] && ...);
     }
 
     void update();
 
-    template<typename T, typename... Ts>
-    u32 addComponent(Ts&&... args) {
-        std::vector<T>& pool = *std::get<Pool<T>>(m_componentPool);
-        pool.emplace_back(std::forward<Ts>(args)...);
-        return pool.size();
-    }
+    template<typename T>
+    T& add(Entity&);
 
     template<typename T>
-    T& getComponent(u32 id) {
-        std::vector<T>& pool = *std::get<Pool<T>>(m_componentPool);
-        return pool[id];
-    }
+    void del(Entity&);
 
     template<typename T>
-    void delComponent(u32 id) {
-        std::vector<T>& pool = *std::get<Pool<T>>(m_componentPool);
-        T& last = pool[pool.size()-1];
-        T& replaced = pool[id];
-        replaced = std::move(last);
-        replaced.id = id;
-        pool.pop_back();
-    }
+    T& get(u32 id);
+
 };
 

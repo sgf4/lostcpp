@@ -2,13 +2,13 @@
 #include "../Loader.hpp"
 #include "World.hpp"
 #include "Entity.hpp"
-#include "Component/Triangle.hpp"
+#include "Component/Component.hpp"
 
 class ExampleWorld : public World {
 
 public:
     void init() {
-        getComponentManager().loadComponent<Triangle>();
+        getComponentManager().load<Triangle>();
         Entity& e = addEntity();
         e.addComponent<Triangle>();
     }

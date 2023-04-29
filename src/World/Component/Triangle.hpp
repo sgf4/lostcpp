@@ -15,8 +15,8 @@ struct TriangleLoader {
     TriangleLoader();
 };
 
-struct Triangle {
-    Triangle() {}
+class Triangle : public Component {
+public:
     void update() {}
 };
 
