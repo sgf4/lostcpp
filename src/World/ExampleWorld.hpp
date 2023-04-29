@@ -1,17 +1,16 @@
 #pragma once
-#include "World.hpp"
-#include "Entity/Triangle.hpp"
 #include "../Loader.hpp"
-#include "Entity/Sgf4.hpp"
+#include "World.hpp"
+#include "Entity.hpp"
+#include "Component/Triangle.hpp"
 
-class ExampleWorld : public World, public Loader<
-    TriangleLoader,
-    Sgf4Loader
-> {
+class ExampleWorld : public World {
 
 public:
-    ExampleWorld() {
-        addEntity<Sgf4>(1, 0, 0);
+    void init() {
+        getComponentManager().loadComponent<Triangle>();
+        Entity& e = addEntity();
+        e.addComponent<Triangle>();
     }
 
     void update() {

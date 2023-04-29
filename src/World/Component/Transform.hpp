@@ -1,8 +1,8 @@
 #pragma once
-#include "Component.hpp"
-
 #include <GL.hpp>
 #include <glm/vec3.hpp>
+
+#define TRANSFORM ENTITY.getComponent<Transform>()
 
 class Transform {
 public:

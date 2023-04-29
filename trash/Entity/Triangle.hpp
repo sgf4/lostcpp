@@ -1,6 +1,6 @@
 #pragma once
 #include "GL.hpp"
-#include "Entity.hpp"
+#include <ECS/Entity.hpp>
 #include "../Component/Transform.hpp"
 
 struct TriangleLoader {
@@ -16,9 +16,7 @@ struct TriangleLoader {
     TriangleLoader();
 };
 
-struct Triangle : Entity {
-    Transform transform;
-
+struct Triangle {
     Triangle(float x, float y, float z);
     void update();
 };

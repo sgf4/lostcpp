@@ -1,5 +1,5 @@
 #pragma once 
-#include "Component.hpp"
+//#include "Component.hpp"
 
 #include <glm/vec2.hpp>
 #include <GL.hpp>

@@ -2,7 +2,6 @@
 #include "GL.hpp"
 #include "Window.hpp"
 #include "World/World.hpp"
-#include "Constructor.hpp"
 
 #include <memory>
 #include <unordered_set>
@@ -46,7 +45,7 @@ public:
             
             // Update worlds
             for (World* world : m_worlds) {
-                World::current = world;
+                world->updateEntities();
                 world->update();
             }
         }
@@ -54,6 +53,10 @@ public:
 
     void addWorld(World* world) {
         m_worlds.insert(world);
+        World* w = World::current;
+        World::current = world;
+        world->init();
+        World::current = w;
     }
 
     void delWorld(World* world) {

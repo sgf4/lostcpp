@@ -30,12 +30,12 @@ TriangleLoader::TriangleLoader() {
 
 
 Triangle::Triangle(float x, float y, float z) {
-    transform.setPosition(x, y, z);
+    setPosition(x, y, z);
 }
 
 void Triangle::update() {
     auto& l = getLoader<TriangleLoader>();
-    transform.update(l.shader);
+    Transform::update(l.shader);
     glBindVertexArray(l.vao);
     glUseProgram(l.shader);
     glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -43,8 +43,8 @@ void Triangle::update() {
     glBindVertexArray(0);
     glUseProgram(0);
 
-    if (WINDOW.getKey(KEY_RIGHT)) transform.rotation.z += 500 * WTIME.getDelta();
-    if (WINDOW.getKey(KEY_LEFT)) transform.rotation.z -= 500 * WTIME.getDelta();
-    if (WINDOW.getKey(KEY_UP)) transform.rotation.x += 500 * WTIME.getDelta();
-    if (WINDOW.getKey(KEY_DOWN)) transform.rotation.x -= 500 * WTIME.getDelta();
+    if (WINDOW.getKey(KEY_RIGHT)) rotation.z += 500 * WTIME.getDelta();
+    if (WINDOW.getKey(KEY_LEFT)) rotation.z -= 500 * WTIME.getDelta();
+    if (WINDOW.getKey(KEY_UP)) rotation.x += 500 * WTIME.getDelta();
+    if (WINDOW.getKey(KEY_DOWN)) rotation.x -= 500 * WTIME.getDelta();
 }

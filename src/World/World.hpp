@@ -1,26 +1,22 @@
 #pragma once
-#include "../Integers.hpp"
-#include "../Game.hpp"
-#include "Camera.hpp"
-#include "../Window.hpp"
-#include "../Time.hpp"
-#include "Entity/Entity.hpp"
-#include "Loader.hpp"
-
+#include <Integers.hpp>
+#include <Time.hpp>
+#include <GL.hpp>
 #include <unordered_set>
 
 #define WORLD (*World::current)
 #define CAMERA WORLD.getCamera()
 #define WTIME WORLD.getTime()
 
-class World;
-
+struct ComponentManager;
+class Entity;
 class World {
     u64 m_id;
     Time m_time;
-    Camera m_camera;
 
-    std::unordered_set<Entity*> m_entities;
+    std::unique_ptr<ComponentManager> m_componentManager;
+    std::vector<Entity> m_entities;
+    
 public:
 
     inline static World* current;
@@ -28,20 +24,18 @@ public:
     World();
     virtual ~World();
 
-    Entity& addEntity(Entity* e);
+    Entity& addEntity();
+    
+    Entity& getEntity(u32 id);
 
-    template<typename T, typename... Ts>
-    T& addEntity(Ts&&... args) {
-        return static_cast<T&>(addEntity(new T(std::forward<Ts>(args)...)));
-    }
+    virtual void init() {}
+    virtual void update() {}
 
-    void delEntity(Entity* e);
-
-    virtual void update();
+    void updateEntities();
     void updateUniforms(GL::Shader& s);
+    ComponentManager& getComponentManager() { return *m_componentManager; }
     
     auto getId() const { return m_id; }
-    auto& getCamera() { return m_camera; }
+    //auto& getCamera() { return m_camera; }
     Time& getTime() { return m_time; }
 };
-

@@ -20,4 +20,4 @@
 #include <glm/mat3x3.hpp>
 #include <type_traits>
 #include <functional>
-#include "Integers.hpp"
+#include <bitset>

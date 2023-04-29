@@ -1,6 +1,7 @@
 #pragma once 
-#include "Component.hpp"
 
-class Physics : public Component {
+class Physics {
 
+public:
+    void update() {}
 };
