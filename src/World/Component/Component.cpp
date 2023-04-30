@@ -8,136 +8,88 @@
 #include "Texture.hpp"
 #include "Triangle.hpp"
 
-template<typename T>
-BasicComponentSystem<T>::BasicComponentSystem() {
+template<typename C>
+ComponentSystem<C>::ComponentSystem() {
     m_components.reserve(32);
 }
 
 template<typename C>
-template<typename T>
-T& BasicComponentSystem<C>::add(Entity& e) {
-    T& c = m_components.emplace_back();
+C& ComponentSystem<C>::add(Entity& e) {
+    C& c = m_components.emplace_back();
     c.eId = e.id;
-    e.setComponentKey<T>(m_components.size()-1);
-    e.getComponentMask().set(ComponentManager::getId<T>());
+    e.setComponentKey<C>(m_components.size()-1);
+    e.getComponentMask().set(ComponentManager::getId<C>());
     c.init();
     return c;
 }
 
 template<typename C>
-template<typename T>
-void BasicComponentSystem<C>::del(Entity& e) {
-    T& last = m_components[m_components.size()-1];
-    u32 componentKey = e.getComponentKey<T>();
-    T& component = m_components[componentKey];
+void ComponentSystem<C>::del(Entity& e) {
+    C& last = m_components[m_components.size()-1];
+    u32 componentKey = e.getComponentKey<C>();
+    C& component = m_components[componentKey];
     component.destroy();
     component = std::move(last);
 
     Entity& eReplaced = component.getEntity();
-    eReplaced.setComponentKey<T>(componentKey);
-    e.getComponentMask().reset(ComponentManager::getId<T>());
+    eReplaced.setComponentKey<C>(componentKey);
+    e.getComponentMask().reset(ComponentManager::getId<C>());
     m_components.pop_back();
 }
 
 template<typename C>
-template<typename T>
-T& BasicComponentSystem<C>::get(Entity& e) {
-    return m_components[e.getComponentKey<T>()];
+C& ComponentSystem<C>::get(Entity& e) {
+    return m_components[e.getComponentKey<C>()];
 }
 
 
 template<typename C>
-void BasicComponentSystem<C>::update() {
+void ComponentSystem<C>::update() {
     for (C& component : m_components) {
         component.update();
     }
 }
 
-
-class ComponentSystemManager {
-    std::bitset<NComponents> m_loadedMask;
-
-    template<typename T>
-    using System = std::conditional_t<std::is_same_v<typename T::CustomComponentSystem, void>, 
-        BasicComponentSystem<T>,
-        typename T::CustomComponentSystem
-    >;
-
-    template<typename T>
-    using SystemUniq = std::unique_ptr<System<T>>;
-
-    template<typename... Ts>
-    using SystemGroup = std::tuple<SystemUniq<Ts>...>;
-
-    TupleForward<ComponentList, SystemGroup> m_systems;
-
-
-public:
-
-    ComponentSystemManager() {
-
-    }
-
-    void update() {
-        TupleForwardFn<ComponentList>([&] <typename... Ts> () {
-            ([&] <typename T> () {
-                if (!m_loadedMask[ComponentManager::getId<T>()]) return;
-                std::get<SystemUniq<T>>(m_systems)->update();
-            }.template operator()<Ts>(), ...);
-        });
-    }
-
-    template<typename T>
-    void load() {
-        m_loadedMask.set(ComponentManager::getId<T>());
-        auto& uniq = std::get<SystemUniq<T>>(m_systems);
-        uniq = std::make_unique<System<T>>();
-    }
-
-    template<typename T>
-    void unload() {
-        m_loadedMask.reset(ComponentManager::getId<T>());
-        auto& uniq = std::get<SystemUniq<T>>(m_systems);
-        uniq.reset();
-    }
-
-    template<typename T>
-    System<T>& get() {
-        return *std::get<SystemUniq<T>>(m_systems);
-    }
-};
-
-ComponentManager::ComponentManager() : m_componentSystemManager(std::make_unique<ComponentSystemManager>()) {
+ComponentManager::ComponentManager() {
 
 }
 
 void ComponentManager::update() {
-
+    TupleForwardFn<ComponentList>([&] <typename... Ts> () {
+        ([&] <typename T> () {
+            if (!m_loadedMask[ComponentManager::getId<T>()]) return;
+            std::get<SystemUniq<T>>(m_systems)->update();
+        }.template operator()<Ts>(), ...);
+    });
 }
 
 template<typename T>
 void ComponentManager::load() {
-    m_componentSystemManager->load<T>();
+    m_loadedMask.set(ComponentManager::getId<T>());
+    auto& uniq = std::get<SystemUniq<T>>(m_systems);
+    uniq = std::make_unique<ComponentSystem<T>>();
 }
 
 template<typename T>
 void ComponentManager::unload() {
-    m_componentSystemManager->unload<T>();
+    m_loadedMask.reset(ComponentManager::getId<T>());
+    auto& uniq = std::get<SystemUniq<T>>(m_systems);
+    uniq.reset();
 }
 
 template<typename T>
 T& ComponentManager::add(Entity& entity) {
-    return m_componentSystemManager->get<T>().template add<T>(entity);
+    return std::get<SystemUniq<T>>(m_systems)->add(entity);
 }
 
 template<typename T>
 void ComponentManager::del(Entity& entity) {
-    m_componentSystemManager->get<T>().template del<T>(entity);
+    std::get<SystemUniq<T>>(m_systems)->del(entity);
 }
 
 template<typename T>
 T& ComponentManager::get(Entity& entity) {
-    return m_componentSystemManager->get<T>().template get<T>(entity);
+    return std::get<SystemUniq<T>>(m_systems)->get(entity);
 }
 
 ComponentManager::~ComponentManager() {

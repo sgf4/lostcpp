@@ -18,27 +18,21 @@ constexpr u32 NComponents = std::tuple_size_v<ComponentList>;
 class Entity;
 
 template<typename C>
-class BasicComponentSystem {
+class ComponentSystem {
     std::vector<C> m_components;
 
 public:
 
-    BasicComponentSystem();
+    ComponentSystem();
 
-    template<typename T>
-    T& add(Entity& e);
-
-    template<typename T>
+    C& add(Entity& e);
     void del(Entity& e);
-
-    template<typename T>
-    T& get(Entity& e);
+    C& get(Entity& e);
 
     void update();
 };
 
 struct Component {
-    using CustomComponentSystem = void;
 
     u32 eId;
 
@@ -54,7 +48,16 @@ struct Component {
 class ComponentSystemManager; 
 
 class ComponentManager {
-    std::unique_ptr<ComponentSystemManager> m_componentSystemManager;
+    std::bitset<NComponents> m_loadedMask;
+
+    template<typename T>
+    using SystemUniq = std::unique_ptr<ComponentSystem<T>>;
+
+    template<typename... Ts>
+    using SystemGroup = std::tuple<SystemUniq<Ts>...>;
+
+    TupleForward<ComponentList, SystemGroup> m_systems;
+
 public:
 
     ComponentManager();
