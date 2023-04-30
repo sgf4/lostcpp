@@ -38,7 +38,7 @@ public:
     template<typename T>
     T& getComponent() {
         ComponentManager& cm = WORLD.getComponentManager();
-        return cm.get<T>(getComponentKey<T>());
+        return cm.get<T>(*this);
     }
 
     std::bitset<NComponents>& getComponentMask() { 

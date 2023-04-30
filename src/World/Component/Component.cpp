@@ -8,83 +8,136 @@
 #include "Texture.hpp"
 #include "Triangle.hpp"
 
-
-ComponentManager::ComponentManager() {
-
-}
-
-void ComponentManager::update() {
-    TupleForwardFn<ComponentList>([&] <typename... Ts> () {
-        ([&] <typename T> () {
-            if (!m_loadedMask[getId<T>()]) return;
-            std::vector<T>& pool = *std::get<Pool<T>>(m_pool);
-            for (T& component : pool) {
-                component.update();
-            }
-        }.template operator()<Ts>(), ...);
-    });
-}
-
 template<typename T>
-void ComponentManager::load() {
-    m_loadedMask.set(getId<T>());
-    auto& uniq = std::get<Pool<T>>(m_pool);
-    uniq = std::make_unique<std::vector<T>>();
-    uniq->reserve(32);
-
-    using ComponentLoader = typename T::Loader;
-    if constexpr (!std::is_same_v<ComponentLoader, Component::Loader>) {
-        std::unique_ptr<Component::Loader>& loader = m_loaders[getId<T>()];
-        if (!loader.get()) loader = std::make_unique<ComponentLoader>();
-    }
+BasicComponentSystem<T>::BasicComponentSystem() {
+    m_components.reserve(32);
 }
 
+template<typename C>
 template<typename T>
-void ComponentManager::unload() {
-    m_loadedMask.reset(getId<T>());
-    auto& uniq = std::get<Pool<T>>(m_pool);
-    uniq.reset();
-
-
-}
-
-template<typename T>
-T& ComponentManager::add(Entity& entity) {
-    std::vector<T>& pool = *std::get<Pool<T>>(m_pool);
-
-    auto& c = pool.emplace_back();
-    c.eId = entity.id;
-    entity.setComponentKey<T>(pool.size()-1);
-    entity.getComponentMask().set(getId<T>());
+T& BasicComponentSystem<C>::add(Entity& e) {
+    T& c = m_components.emplace_back();
+    c.eId = e.id;
+    e.setComponentKey<T>(m_components.size()-1);
+    e.getComponentMask().set(ComponentManager::getId<T>());
     c.init();
     return c;
 }
 
+template<typename C>
 template<typename T>
-void ComponentManager::del(Entity& entity) {
-    std::vector<T>& pool = *std::get<Pool<T>>(m_pool);
-    T& last = pool[pool.size()-1];
-    u32 componentKey = entity.getComponentKey<T>();
-    T& component = pool[componentKey];
+void BasicComponentSystem<C>::del(Entity& e) {
+    T& last = m_components[m_components.size()-1];
+    u32 componentKey = e.getComponentKey<T>();
+    T& component = m_components[componentKey];
     component.destroy();
     component = std::move(last);
 
     Entity& eReplaced = component.getEntity();
     eReplaced.setComponentKey<T>(componentKey);
-    entity.getComponentMask().reset(getId<T>());
-    pool.pop_back();
+    e.getComponentMask().reset(ComponentManager::getId<T>());
+    m_components.pop_back();
+}
+
+template<typename C>
+template<typename T>
+T& BasicComponentSystem<C>::get(Entity& e) {
+    return m_components[e.getComponentKey<T>()];
+}
+
+
+template<typename C>
+void BasicComponentSystem<C>::update() {
+    for (C& component : m_components) {
+        component.update();
+    }
+}
+
+
+class ComponentSystemManager {
+    std::bitset<NComponents> m_loadedMask;
+
+    template<typename T>
+    using System = std::conditional_t<std::is_same_v<typename T::CustomComponentSystem, void>, 
+        BasicComponentSystem<T>,
+        typename T::CustomComponentSystem
+    >;
+
+    template<typename T>
+    using SystemUniq = std::unique_ptr<System<T>>;
+
+    template<typename... Ts>
+    using SystemGroup = std::tuple<SystemUniq<Ts>...>;
+
+    TupleForward<ComponentList, SystemGroup> m_systems;
+
+
+public:
+
+    ComponentSystemManager() {
+
+    }
+
+    void update() {
+        TupleForwardFn<ComponentList>([&] <typename... Ts> () {
+            ([&] <typename T> () {
+                if (!m_loadedMask[ComponentManager::getId<T>()]) return;
+                std::get<SystemUniq<T>>(m_systems)->update();
+            }.template operator()<Ts>(), ...);
+        });
+    }
+
+    template<typename T>
+    void load() {
+        m_loadedMask.set(ComponentManager::getId<T>());
+        auto& uniq = std::get<SystemUniq<T>>(m_systems);
+        uniq = std::make_unique<System<T>>();
+    }
+
+    template<typename T>
+    void unload() {
+        m_loadedMask.reset(ComponentManager::getId<T>());
+        auto& uniq = std::get<SystemUniq<T>>(m_systems);
+        uniq.reset();
+    }
+
+    template<typename T>
+    System<T>& get() {
+        return *std::get<SystemUniq<T>>(m_systems);
+    }
+};
+
+ComponentManager::ComponentManager() : m_componentSystemManager(std::make_unique<ComponentSystemManager>()) {
+
+}
+
+void ComponentManager::update() {
+
 }
 
 template<typename T>
-Entity& ComponentManager::getEntity(u32 id) {
-    std::vector<T>& pool = *std::get<Pool<T>>(m_pool);
-    return pool[id].getEntity();
+void ComponentManager::load() {
+    m_componentSystemManager->load<T>();
 }
 
 template<typename T>
-T& ComponentManager::get(u32 id) {
-    std::vector<T>& pool = *std::get<Pool<T>>(m_pool);
-    return pool[id];
+void ComponentManager::unload() {
+    m_componentSystemManager->unload<T>();
+}
+
+template<typename T>
+T& ComponentManager::add(Entity& entity) {
+    return m_componentSystemManager->get<T>().template add<T>(entity);
+}
+
+template<typename T>
+void ComponentManager::del(Entity& entity) {
+    m_componentSystemManager->get<T>().template del<T>(entity);
+}
+
+template<typename T>
+T& ComponentManager::get(Entity& entity) {
+    return m_componentSystemManager->get<T>().template get<T>(entity);
 }
 
 ComponentManager::~ComponentManager() {
@@ -104,7 +157,6 @@ void instanceTemplating() {
             instance(&ComponentManager::add<T>);
             instance(&ComponentManager::del<T>);
             instance(&ComponentManager::get<T>);
-            instance(&ComponentManager::getEntity<T>);
         }.template operator()<Ts>(), ...);
     });
 }

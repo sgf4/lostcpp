@@ -16,10 +16,29 @@ using ComponentList = std::tuple<
 constexpr u32 NComponents = std::tuple_size_v<ComponentList>;
 
 class Entity;
+
+template<typename C>
+class BasicComponentSystem {
+    std::vector<C> m_components;
+
+public:
+
+    BasicComponentSystem();
+
+    template<typename T>
+    T& add(Entity& e);
+
+    template<typename T>
+    void del(Entity& e);
+
+    template<typename T>
+    T& get(Entity& e);
+
+    void update();
+};
+
 struct Component {
-    struct Loader {
-        virtual ~Loader() {}
-    };
+    using CustomComponentSystem = void;
 
     u32 eId;
 
@@ -32,17 +51,10 @@ struct Component {
     }
 };
 
+class ComponentSystemManager; 
+
 class ComponentManager {
-    std::bitset<NComponents> m_loadedMask;
-
-    template<typename T>
-    using Pool = std::unique_ptr<std::vector<T>>;
-
-    template<typename... Ts>
-    using MultiPool = std::tuple<Pool<Ts>...>;
-
-    TupleForward<ComponentList, MultiPool> m_pool;
-    std::array<std::unique_ptr<Component::Loader>, NComponents> m_loaders;
+    std::unique_ptr<ComponentSystemManager> m_componentSystemManager;
 public:
 
     ComponentManager();
@@ -59,14 +71,6 @@ public:
     template<typename T>
     void unload();
 
-    template<typename T>
-    Entity& getEntity(u32 id);
-
-    template<typename... Ts>
-    bool isLoaded() {
-        return (m_loadedMask[getId<Ts>] && ...);
-    }
-
     void update();
 
     template<typename T>
@@ -76,7 +80,7 @@ public:
     void del(Entity&);
 
     template<typename T>
-    T& get(u32 id);
+    T& get(Entity& e);
 
 };
 
