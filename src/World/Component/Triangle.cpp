@@ -23,7 +23,7 @@ static constexpr std::initializer_list<float> vertices {
 
 ComponentSystem<Triangle>::ComponentSystem() {
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(float), vertices.begin(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(float), vertices.begin(), GL_STATIC_DRAW);
     
     glBindVertexArray(vao);
     glVertexAttribPointer(APOS, 2, GL_FLOAT, GL_FALSE, sizeof(float)*5, NULL);

@@ -46,8 +46,8 @@ public:
 template<FixedString str1, FixedString str2 = str1>
 struct EmbedShader : Shader { 
     EmbedShader() : Shader(
-        embed<"shaders/" + str1 + ".vert">.newXorInstance(), 
-        embed<"shaders/" + str2 + ".frag">.newXorInstance()
+        getEmbed<"shaders/" + str1 + ".vert">(), 
+        getEmbed<"shaders/" + str2 + ".frag">()
     ) {}
 };
 

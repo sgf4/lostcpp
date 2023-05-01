@@ -26,7 +26,7 @@ struct GLFWInstance {
 };
 
 class Window {
-    glm::uvec2 m_resolution {640, 480}, m_offset, m_size;
+    glm::uvec2 m_resolution {640, 480}, m_offset, m_size {640, 480};
 
     const char* m_title {"omg"};
     bool m_vsync {true}, m_fullscreen {false}, m_cursorIshiden {false};

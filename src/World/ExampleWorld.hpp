@@ -9,9 +9,10 @@ public:
     void init() {
         getComponentManager().load<Triangle>();
 
-    
-        Entity& e = addEntity();
-        e.addComponent<Triangle>();
+        for (int i=0; i<100; i++) {
+            Entity& e = addEntity();
+            e.addComponent<Triangle>();
+        }
         //delEntity(e.id);
     }
 

@@ -92,19 +92,21 @@ ComponentManager::~ComponentManager() {
 }
 
 template<typename C, typename R, typename... P>
+#ifdef __clang__
+__attribute__ ((optnone))
+#elif __GNUC__
+__attribute__((optimize("O0")))
+#endif
 void instance(R (C::*ptr) (P...)) {
-    std::cout << ptr << std::endl;
 }
 
 void instanceTemplating() {
-    TupleForwardFn<ComponentList>([&] <typename... Ts> () { 
-        ([&] <typename T> () {
-            instance(&ComponentManager::load<T>);
-            instance(&ComponentManager::unload<T>);
-            instance(&BasicComponentSystem<T>::get);
-            instance(&BasicComponentSystem<T>::add);
-            instance(&BasicComponentSystem<T>::del);
-            instance(&BasicComponentSystem<T>::update);
-        }.template operator()<Ts>(), ...);
+    ForEachTupleType<ComponentList>([&] <typename T> () { 
+        instance(&ComponentManager::load<T>);
+        instance(&ComponentManager::unload<T>);
+        instance(&BasicComponentSystem<T>::get);
+        instance(&BasicComponentSystem<T>::add);
+        instance(&BasicComponentSystem<T>::del);
+        instance(&BasicComponentSystem<T>::update);
     });
 }
