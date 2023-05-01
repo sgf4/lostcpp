@@ -11,7 +11,6 @@ class Camera : public Component {
     bool m_control { false };
     glm::vec3 m_direction;
     glm::mat4 m_proj;
-    std::unordered_set<GL::Shader*> m_shaders;
 
 public:
 

@@ -8,11 +8,14 @@ class ExampleWorld : public World {
 public:
     void init() {
         getComponentManager().load<Triangle>();
+
+    
         Entity& e = addEntity();
         e.addComponent<Triangle>();
+        //delEntity(e.id);
     }
 
     void update() {
-        World::update();
+        
     }
 };

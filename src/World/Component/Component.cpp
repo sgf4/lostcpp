@@ -3,18 +3,14 @@
 
 #include "Transform.hpp"
 #include "Transform2D.hpp"
+#include "Camera.hpp"
 #include "Physics.hpp"
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include "Triangle.hpp"
 
 template<typename C>
-ComponentSystem<C>::ComponentSystem() {
-    m_components.reserve(32);
-}
-
-template<typename C>
-C& ComponentSystem<C>::add(Entity& e) {
+C& BasicComponentSystem<C>::add(Entity& e) {
     C& c = m_components.emplace_back();
     c.eId = e.id;
     e.setComponentKey<C>(m_components.size()-1);
@@ -24,27 +20,28 @@ C& ComponentSystem<C>::add(Entity& e) {
 }
 
 template<typename C>
-void ComponentSystem<C>::del(Entity& e) {
-    C& last = m_components[m_components.size()-1];
+void BasicComponentSystem<C>::del(Entity& e) {
     u32 componentKey = e.getComponentKey<C>();
     C& component = m_components[componentKey];
     component.destroy();
-    component = std::move(last);
-
-    Entity& eReplaced = component.getEntity();
-    eReplaced.setComponentKey<C>(componentKey);
+    component = std::move(*--m_components.end());
     e.getComponentMask().reset(ComponentManager::getId<C>());
     m_components.pop_back();
+
+    if (m_components.size() == componentKey) return;
+
+    Entity& entityFromMovedComponent = component.getEntity();
+    entityFromMovedComponent.setComponentKey<C>(componentKey);
 }
 
 template<typename C>
-C& ComponentSystem<C>::get(Entity& e) {
+C& BasicComponentSystem<C>::get(Entity& e) {
     return m_components[e.getComponentKey<C>()];
 }
 
 
 template<typename C>
-void ComponentSystem<C>::update() {
+void BasicComponentSystem<C>::update() {
     for (C& component : m_components) {
         component.update();
     }
@@ -55,11 +52,16 @@ ComponentManager::ComponentManager() {
 }
 
 void ComponentManager::update() {
-    TupleForwardFn<ComponentList>([&] <typename... Ts> () {
-        ([&] <typename T> () {
-            if (!m_loadedMask[ComponentManager::getId<T>()]) return;
-            std::get<SystemUniq<T>>(m_systems)->update();
-        }.template operator()<Ts>(), ...);
+    ForEachTupleType<ComponentList>([&] <typename T> () {
+        if (!m_loadedMask[ComponentManager::getId<T>()]) return;
+        std::get<SystemUniq<T>>(m_systems)->update();
+    });
+}
+
+void ComponentManager::updateIds(Entity& e) {
+    ForEachTupleType<ComponentList>([&] <typename T> () {
+        if (!e.hasComponent<T>()) return;
+        e.getComponent<T>().eId = e.id;
     });
 }
 
@@ -77,19 +79,12 @@ void ComponentManager::unload() {
     uniq.reset();
 }
 
-template<typename T>
-T& ComponentManager::add(Entity& entity) {
-    return std::get<SystemUniq<T>>(m_systems)->add(entity);
-}
-
-template<typename T>
-void ComponentManager::del(Entity& entity) {
-    std::get<SystemUniq<T>>(m_systems)->del(entity);
-}
-
-template<typename T>
-T& ComponentManager::get(Entity& entity) {
-    return std::get<SystemUniq<T>>(m_systems)->get(entity);
+void ComponentManager::delAll(Entity& e) {
+    ForEachTupleType<ComponentList>([&] <typename T> () {
+        if (e.hasComponent<T>()) {
+            e.delComponent<T>();
+        }
+    });
 }
 
 ComponentManager::~ComponentManager() {
@@ -106,9 +101,10 @@ void instanceTemplating() {
         ([&] <typename T> () {
             instance(&ComponentManager::load<T>);
             instance(&ComponentManager::unload<T>);
-            instance(&ComponentManager::add<T>);
-            instance(&ComponentManager::del<T>);
-            instance(&ComponentManager::get<T>);
+            instance(&BasicComponentSystem<T>::get);
+            instance(&BasicComponentSystem<T>::add);
+            instance(&BasicComponentSystem<T>::del);
+            instance(&BasicComponentSystem<T>::update);
         }.template operator()<Ts>(), ...);
     });
 }

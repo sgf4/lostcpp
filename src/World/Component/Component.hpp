@@ -7,6 +7,7 @@
 using ComponentList = std::tuple<
     class Transform,
     class Transform2D,
+    class Camera,
     class Physics,
     class Shader,
     class Texture,
@@ -18,31 +19,25 @@ constexpr u32 NComponents = std::tuple_size_v<ComponentList>;
 class Entity;
 
 template<typename C>
-class ComponentSystem {
+class BasicComponentSystem {
     std::vector<C> m_components;
 
 public:
-
-    ComponentSystem();
+    BasicComponentSystem() {
+        m_components.reserve(32);
+    }
 
     C& add(Entity& e);
     void del(Entity& e);
     C& get(Entity& e);
 
     void update();
+
+    ~BasicComponentSystem() {}
 };
 
-struct Component {
-
-    u32 eId;
-
-    void init() {}
-    void update() {}
-    void destroy() {}
-
-    Entity& getEntity() {
-        return WORLD.getEntity(eId);
-    }
+template<typename C>
+class ComponentSystem : public BasicComponentSystem<C> {
 };
 
 class ComponentSystemManager; 
@@ -76,14 +71,56 @@ public:
 
     void update();
 
-    template<typename T>
-    T& add(Entity&);
+    void updateIds(Entity& e);
 
     template<typename T>
-    void del(Entity&);
+    T& add(Entity& e) {
+        return std::get<SystemUniq<T>>(m_systems)->add(e);
+    }
 
     template<typename T>
-    T& get(Entity& e);
+    void del(Entity& e) {
+        std::get<SystemUniq<T>>(m_systems)->del(e);
+    }
+
+    void delAll(Entity& e);
+
+    template<typename T>
+    T& get(Entity& e) {
+        return std::get<SystemUniq<T>>(m_systems)->get(e);
+    }
+
+    template<typename T>
+    ComponentSystem<T>& getSystem() {
+        return *std::get<SystemUniq<T>>(m_systems);
+    }
 
 };
 
+struct Component {
+
+    u32 eId;
+
+    void init() {}
+    void update() {}
+    void destroy() {}
+
+    Entity& getEntity() {
+        return WORLD.getEntity(eId);
+    }
+
+    template<typename T>
+    T& addComponent() {
+        return WORLD.getComponentManager().add<T>(getEntity());
+    }
+
+    template<typename T>
+    T& getComponent() {
+        return WORLD.getComponentManager().get<T>(getEntity());
+    }
+
+    template<typename T>
+    ComponentSystem<T>& getSystem() {
+        return WORLD.getComponentManager().getSystem<T>();
+    }
+};

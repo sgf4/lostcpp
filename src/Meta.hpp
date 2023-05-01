@@ -137,6 +137,13 @@ constexpr decltype(auto) TupleForwardFn(auto fn) {
     }(TypeIdentity<T>{});
 }
 
+template<typename T>
+constexpr decltype(auto) ForEachTupleType(auto fn) {
+    return [&] <typename... Ts> (TypeIdentity<std::tuple<Ts...>>) constexpr {
+        (fn.template operator()<Ts>(), ...);
+    }(TypeIdentity<T>{});
+}
+
 template<typename T, typename Tupl, u32 I=0>
 struct TupleGetIndexImpl {};
 

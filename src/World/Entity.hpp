@@ -21,7 +21,6 @@ public:
 
     template<typename T>
     T& addComponent() {
-        if (hasComponent<T>()) throw "Component already set";
         return WORLD.getComponentManager().add<T>(*this);
     }
 
@@ -58,14 +57,13 @@ public:
     auto getId() { return id; }
     operator u32() { return getId(); }
 
-    ~Entity() {
-        TupleForwardFn<ComponentList>([&] <typename... Ts> () {
-            ([&] <typename T> () {
-                if (hasComponent<T>()) {
-                    delComponent<T>();
-                }
-            }.template operator()<Ts>(), ...);
-        });
+    void destroy() {
+        WORLD.getComponentManager().delAll(*this);
+    }
+
+    void updateId(u32 i) {
+        id = i;
+        WORLD.getComponentManager().updateIds(*this);
     }
 };
 
