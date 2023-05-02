@@ -3,7 +3,7 @@
 # Lostcpp
 
 Lostcpp is a simple 3D game using OpenGL 3.3 Core. Here we don't want using or creating any game engine, because we don't really want any kind of abstractions.
-We use an ECS to manage and ease all the creation of Entities its Components.
+We use an ECS to manage and ease all the creation of Entities and its Components.
 
 ## Build
 
