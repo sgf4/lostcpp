@@ -1,18 +1,20 @@
 #include "Triangle.hpp"
 #include "../Entity.hpp"
+#include "Camera.hpp"
+#include "Shader.hpp"
+
+#include <glm/gtc/type_ptr.hpp>
 
 void Triangle::init() {
-    addComponent<Transform2D>();
+    addComponent<Transform>();
+    // addComponent<Shader>()
+        // .setShader(getSystem<Triangle>().shader);
 }
 
 void Triangle::update() {
     auto& l = getSystem<Triangle>();
-    glBindVertexArray(l.vao);
-    glUseProgram(l.shader);
+    glUniformMatrix4fv(l.shader.getUniform("umodel"), 1, GL_FALSE, glm::value_ptr(TRANSFORM.model));
     glDrawArrays(GL_TRIANGLES, 0, 3);
-
-    glBindVertexArray(0);
-    glUseProgram(0);
 }
 
 static constexpr std::initializer_list<float> vertices {
@@ -37,6 +39,9 @@ ComponentSystem<Triangle>::ComponentSystem() {
 }
 
 void ComponentSystem<Triangle>::update() {
-
+    glBindVertexArray(vao);
+    glUseProgram(shader);
     BasicComponentSystem<Triangle>::update();
+    glUseProgram(0);
+    glBindVertexArray(0);
 }

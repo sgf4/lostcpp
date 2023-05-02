@@ -1,13 +1,14 @@
 #include "Camera.hpp"
 
-#include <GL.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
+#include "Shader.hpp"
 #include "../Entity.hpp"
 #include "Window.hpp"
 
 void Camera::init() {
+    addComponent<Transform>();
     TRANSFORM.setPosition(0.0, 0.0, -1.0);
 
 }
@@ -38,12 +39,16 @@ void Camera::update() {
     if (WINDOW.getKey(KEY_S)) t.position += glm::vec3(-mov_x, 0.f, -mov_z);
     if (WINDOW.getKey(KEY_A)) t.position += glm::vec3(mov_z, 0.f, -mov_x);
     if (WINDOW.getKey(KEY_D)) t.position += glm::vec3(-mov_z, 0.f, mov_x);
+
+    // Update uniforms
+    for (GL::Shader* s : GL::Shader::shaders) {
+        try {
+            glUseProgram(*s);
+            glUniformMatrix4fv(s->getUniform("uview"), 1, GL_FALSE, glm::value_ptr(t.model));
+            glUniformMatrix4fv(s->getUniform("uproj"), 1, GL_FALSE, glm::value_ptr(m_proj));
+        } catch (const std::out_of_range& e) {}
+    }
+    glUseProgram(0);
+
 }
 
-void Camera::updateUniforms(GL::Shader& s) {
-    auto& t = TRANSFORM;
-    glUseProgram(s);
-    glUniformMatrix4fv(s.getUniform("uview"), 1, GL_FALSE, glm::value_ptr(t.model));
-    glUniformMatrix4fv(s.getUniform("uproj"), 1, GL_FALSE, glm::value_ptr(m_proj));
-    glUseProgram(0);
-}

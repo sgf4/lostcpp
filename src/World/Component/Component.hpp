@@ -19,12 +19,11 @@ constexpr u32 NComponents = std::tuple_size_v<ComponentList>;
 class Entity;
 
 template<typename C>
-class BasicComponentSystem {
-    std::vector<C> m_components;
+struct BasicComponentSystem {
+    std::vector<C> components;
 
-public:
     BasicComponentSystem() {
-        m_components.reserve(32);
+        components.reserve(32);
     }
 
     C& add(Entity& e);

@@ -1,19 +1,24 @@
 #include "World.hpp"
 #include "Entity.hpp"
 #include "Component/Component.hpp"
+#include "Component/Camera.hpp"
+#include "../Window.hpp"
 
 World::World() {
     m_componentManager = std::make_unique<ComponentManager>();
     m_entities.reserve(100);
-
+    
+    WINDOW.hideCursor();    
     current = this;
+
     // Basic components
     m_componentManager->load<Transform>();
+    m_componentManager->load<Shader>();
     m_componentManager->load<Transform2D>();
     m_componentManager->load<Camera>();
 
-    camera = &addEntity();
-    camera->addComponent<Camera>();
+    m_camera = addEntity().ref();
+    (*m_camera)->addComponent<Camera>().setControl(true);
 }
 
 

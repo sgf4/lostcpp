@@ -2,6 +2,7 @@
 #include "Component/Component.hpp"
 #include "Entity.hpp"
 #include "World.hpp"
+#include "../Game.hpp"
 
 #include <array>
 #include <bitset>
@@ -11,6 +12,7 @@
 class Entity {
     std::array<u32, NComponents> m_componentKeys;
     std::bitset<NComponents> m_componentMask;
+    std::weak_ptr<Entity*> m_ref;
 public:
     u32 id;
 
@@ -63,7 +65,17 @@ public:
 
     void updateId(u32 i) {
         id = i;
+        if (auto ref = m_ref.lock()) *ref = this;
         WORLD.getComponentManager().updateIds(*this);
+    }
+
+    std::shared_ptr<Entity*> ref() {
+        if (m_ref.expired()) {
+            auto ref = std::make_shared<Entity*>(this);
+            m_ref = ref;
+            return ref;
+        }
+        return m_ref.lock();
     }
 };
 

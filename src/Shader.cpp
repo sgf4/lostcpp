@@ -3,7 +3,7 @@
 
 using namespace GL;
 
-std::unordered_set<GL::Shader*> Shader::m_shaders;
+std::unordered_set<GL::Shader*> Shader::shaders;
 
 Shader::Shader() {}
 Shader::Shader(const Embed& vsource, const Embed& fsource) {
@@ -67,19 +67,23 @@ Shader::Shader(const Embed& vsource, const Embed& fsource) {
         m_uniforms[name] = glGetUniformLocation(m_program, name);
     }
 
-    m_shaders.insert(this);
+    shaders.insert(this);
 }
 
 Shader& Shader::operator=(Shader&& other) {
+    glDeleteProgram(m_program);
     m_program = other.m_program;
+    other.m_program = 0;
     m_attributes = std::move(other.m_attributes);
     m_uniforms = std::move(other.m_uniforms);
-    m_shaders.insert(this);
-    other.m_program = 0;
+    shaders.insert(this);
+
     return *this;
 }
 
 Shader::~Shader() {
-    m_shaders.erase(this);
-    glDeleteProgram(m_program);
+    if (m_program) {
+        shaders.erase(this);
+        glDeleteProgram(m_program);
+    }
 }

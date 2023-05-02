@@ -91,6 +91,8 @@ Window::Window() {
 
     std::fill_n(m_keys, sizeof(m_keys), KEY_STATE_RELEASED_REPEAT);
     // glfwSetMouseButtonCallback(m_glfwInstance, mouse_button_callback);
+
+    onResize(m_size.x, m_size.y);
 }
 
 void Window::updateUniforms(GL::Shader& s) {

@@ -1,6 +1,7 @@
 #pragma once
 #include "Integers.hpp"
 #include <functional>
+#include <memory>
 
 class Window;
 class World;
@@ -37,4 +38,3 @@ public:
     void forEachShader(const std::function<void(GL::Shader&)>&);
     u64 getNewId();
 };
-

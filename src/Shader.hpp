@@ -12,24 +12,19 @@ class Shader {
     u32 m_program {};
     std::unordered_map<std::string, u32> m_attributes;
     std::unordered_map<std::string, u32> m_uniforms;
-    static std::unordered_set<GL::Shader*> m_shaders;
 
 public:
+    static std::unordered_set<GL::Shader*> shaders;
+
     Shader();
     Shader(const Embed& vsource, const Embed& fsource);
     ~Shader();
 
-    static void forEachAll(const auto& fn) {
-        for (auto shader : m_shaders) {
-            fn(*shader);
-        }
-    }
-
     u32 getAttrib(const char* name) {
-        return m_attributes[name];
+        return m_attributes.at(name);
     }
     u32 getUniform(const char* name) {
-        return m_uniforms[name];
+        return m_uniforms.at(name);
     }
 
     Shader(Shader&& other) {

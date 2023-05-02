@@ -11,9 +11,9 @@
 
 template<typename C>
 C& BasicComponentSystem<C>::add(Entity& e) {
-    C& c = m_components.emplace_back();
+    C& c = components.emplace_back();
     c.eId = e.id;
-    e.setComponentKey<C>(m_components.size()-1);
+    e.setComponentKey<C>(components.size()-1);
     e.getComponentMask().set(ComponentManager::getId<C>());
     c.init();
     return c;
@@ -22,13 +22,13 @@ C& BasicComponentSystem<C>::add(Entity& e) {
 template<typename C>
 void BasicComponentSystem<C>::del(Entity& e) {
     u32 componentKey = e.getComponentKey<C>();
-    C& component = m_components[componentKey];
+    C& component = components[componentKey];
     component.destroy();
-    component = std::move(*--m_components.end());
+    component = std::move(*--components.end());
     e.getComponentMask().reset(ComponentManager::getId<C>());
-    m_components.pop_back();
+    components.pop_back();
 
-    if (m_components.size() == componentKey) return;
+    if (components.size() == componentKey) return;
 
     Entity& entityFromMovedComponent = component.getEntity();
     entityFromMovedComponent.setComponentKey<C>(componentKey);
@@ -36,13 +36,13 @@ void BasicComponentSystem<C>::del(Entity& e) {
 
 template<typename C>
 C& BasicComponentSystem<C>::get(Entity& e) {
-    return m_components[e.getComponentKey<C>()];
+    return components[e.getComponentKey<C>()];
 }
 
 
 template<typename C>
 void BasicComponentSystem<C>::update() {
-    for (C& component : m_components) {
+    for (C& component : components) {
         component.update();
     }
 }
