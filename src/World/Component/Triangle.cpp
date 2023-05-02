@@ -15,6 +15,7 @@ void Triangle::update() {
     auto& l = getSystem<Triangle>();
     glUniformMatrix4fv(l.shader.getUniform("umodel"), 1, GL_FALSE, glm::value_ptr(TRANSFORM.model));
     glDrawArrays(GL_TRIANGLES, 0, 3);
+    getComponent<Transform>().rotation.y = WCAMERAC.yaw + 90;
 }
 
 static constexpr std::initializer_list<float> vertices {

@@ -7,7 +7,7 @@
 World::World() {
     m_componentManager = std::make_unique<ComponentManager>();
     m_entities.reserve(100);
-    
+
     WINDOW.hideCursor();    
     current = this;
 
@@ -18,9 +18,12 @@ World::World() {
     m_componentManager->load<Camera>();
 
     m_camera = addEntity().ref();
-    (*m_camera)->addComponent<Camera>().setControl(true);
+    getCamera().addComponent<Camera>().setControl(true);
 }
 
+u32 World::getEntityCount() {
+    return m_entities.size();
+}
 
 void World::updateWorld() {
     current = this;

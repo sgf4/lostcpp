@@ -11,7 +11,10 @@ public:
     glm::vec3 position {};
     glm::vec3 scale {1, 1, 1};
     glm::vec3 rotation {};
+    bool modelNeedsUpdate { true };
 
     void update();
-    Transform& setPosition(float x, float y, float z) { position = {x, y, z}; return *this; }
+    Transform& setPosition(glm::vec3 p) { position = p; modelNeedsUpdate = true; return *this; }
+    Transform& setScale(glm::vec3 s) { scale = s; modelNeedsUpdate = true; return *this; }
+    Transform& setRotation(glm::vec3 r) { rotation = r; modelNeedsUpdate = true; return *this; }
 };

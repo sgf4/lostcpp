@@ -6,7 +6,8 @@
 #include "../Game.hpp"
 
 #define WORLD (*World::current)
-#define CAMERA (WORLD.getCamera())
+#define WCAMERA (WORLD.getCamera())
+#define WCAMERAC (WORLD.getCamera().getComponent<Camera>())
 #define WTIME WORLD.time
 #define CM WORLD.getComponentManager()
 
@@ -16,22 +17,22 @@ class Entity;
 class World {
     std::unique_ptr<ComponentManager> m_componentManager;
     std::vector<Entity> m_entities;
-    std::shared_ptr<Entity*> m_camera;
+    std::shared_ptr<u32> m_camera;
 public:
 
     u64 id;
     Time time;
     
-
     inline static World* current;
 
     World();
     virtual ~World();
 
     Entity& addEntity();
+    u32 getEntityCount();
     Entity& getEntity(u32 id);
     void delEntity(u32 id);
-    Entity& getCamera() { return **m_camera.get(); }
+    Entity& getCamera() { return getEntity(*m_camera); }
 
     virtual void init() {}
     virtual void update() {}
