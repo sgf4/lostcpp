@@ -1,12 +1,3 @@
-[submodule "glfw"]
-	path = glfw
-	url = https://github.com/glfw/glfw
-[submodule "glm"]
-	path = glm
-	url = https://github.com/g-truc/glm
-[submodule "assimp"]
-	path = assimp
-	url = https://github.com/assimp/assimp
-[submodule "ODE"]
-	path = ODE
-	url = https://github.com/thomasmarsh/ODE
+[submodule "marble"]
+	path = marble
+	url = https://github.com/sgf4/marble
