@@ -19,7 +19,7 @@ along with lostcpp.  If not, see <http://www.gnu.org/licenses/>. */
 #include <worlds/ExampleWorld.hpp>
 
 int main() {
-    Engine engine;
+    ME::Engine engine;
     engine.addWorld<ExampleWorld>();
     engine.update();
     return 0;

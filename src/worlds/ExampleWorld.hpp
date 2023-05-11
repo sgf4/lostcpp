@@ -18,7 +18,7 @@ along with lostcpp.  If not, see <http://www.gnu.org/licenses/>. */
 #pragma once
 #include <marble/world.hpp>
 
-class ExampleWorld : public World {
+class ExampleWorld : public ME::World {
 
 public:
     void init();

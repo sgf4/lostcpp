@@ -50,7 +50,7 @@ def embed(path):
             output_cpp.write(f'// {sum}\n')
             output_cpp.write('#include <embed.hpp>\n')
             output_cpp.write(f'constexpr CompTimeStr {name}_pw {{"{passwd}"}};\n')
-            output_cpp.write(f'u8 {name}[] {{')
+            output_cpp.write(f'ME::u8 {name}[] {{')
 
             while 1:
                 chunk = f.read(chunk_size)

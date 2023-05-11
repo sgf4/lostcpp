@@ -20,14 +20,14 @@ along with lostcpp.  If not, see <http://www.gnu.org/licenses/>. */
 #include <marble/component.hpp>
 #include <embed.hpp>
 
-class Triangle : public Component {
+class Triangle : public ME::Component {
 public:
     void init();
     void update();
 };
 
 template<>
-struct ComponentSystem<Triangle> : BasicComponentSystem<Triangle> {
+struct ME::ComponentSystem<Triangle> : ME::BasicComponentSystem<Triangle> {
     GL::VAO vao;
     GL::VBO vbo;
     GL::Shader shader { embed<"shaders/triangle.vert">.newXorInstance(), embed<"shaders/triangle.frag">.newXorInstance() };

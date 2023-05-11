@@ -22,12 +22,12 @@ along with lostcpp.  If not, see <http://www.gnu.org/licenses/>. */
 #include <marble/integers.hpp>
 
 struct Embed {
-    u8* data;
+    ME::u8* data;
     std::size_t size;
     std::string_view password;
 
     template<std::size_t N>
-    Embed(u8 (&data)[N], std::string_view password) : data(data), size(N-1), password(password) {}
+    Embed(ME::u8 (&data)[N], std::string_view password) : data(data), size(N-1), password(password) {}
 
     class XorInstance {
         Embed& e;
@@ -36,7 +36,7 @@ struct Embed {
             e.doXor();
         }
 
-        operator u8*() const {
+        operator ME::u8*() const {
             return e;
         }
 
@@ -69,7 +69,7 @@ struct Embed {
         return reinterpret_cast<const char*>(data);
     }
 
-    operator u8*() const {
+    operator ME::u8*() const {
         return data;
     }
 

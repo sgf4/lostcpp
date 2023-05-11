@@ -23,6 +23,8 @@ along with lostcpp.  If not, see <http://www.gnu.org/licenses/>. */
 #include <marble/components/transform.hpp>
 //#include "Component/Camera.hpp"
 
+using namespace ME;
+
 void ExampleWorld::init() {
     CM.load<Triangle>();
 

@@ -23,6 +23,8 @@ along with lostcpp.  If not, see <http://www.gnu.org/licenses/>. */
 #include <marble/components/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+using namespace ME;
+
 void Triangle::init() {
     getEntity().addComponent<Transform>();
     // addComponent<Shader>()
