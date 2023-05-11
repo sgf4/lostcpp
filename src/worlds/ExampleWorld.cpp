@@ -36,10 +36,10 @@ void ExampleWorld::init() {
 }
 
 void ExampleWorld::update() {
-    auto& system = CM.getSystem<Triangle>();
-    if (system.count()) {
+    auto& tsystem = CM.getSystem<Triangle>();
+    if (tsystem.count()) {
         if (WINDOW.getKey(KEY_C)) {
-            delEntity(system.get(0).eId);
+            delEntity(tsystem.get(0).eId);
         }
     }
 
@@ -48,5 +48,12 @@ void ExampleWorld::update() {
         .addComponent<Triangle>();
         auto& transform = t.getComponent<Transform>();
         transform = WCAMERA.getComponent<Transform>();
+    }
+
+    static float timer {};
+    timer += WTIME.delta;
+    if (timer > 5.f) {
+        std::cout << tsystem.count() << std::endl;
+        timer = 0.f;
     }
 }

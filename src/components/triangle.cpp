@@ -34,10 +34,11 @@ void Triangle::update() {
     glUniformMatrix4fv(l.shader.getUniform("umodel"), 1, GL_FALSE, glm::value_ptr(TRANSFORM.model));
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
-    if (WINDOW.getKey(KEY_LEFT)) getComponent<Transform>().addRotation(glm::vec3{100.0, 0.0, 0.0} * WTIME.delta);
-    if (WINDOW.getKey(KEY_RIGHT)) getComponent<Transform>().addRotation(glm::vec3{-100.0, 0.0, 0.0} * WTIME.delta);
-    if (WINDOW.getKey(KEY_UP)) getComponent<Transform>().addRotation(glm::vec3{0.0, 100.0, 0.0} * WTIME.delta);
-    if (WINDOW.getKey(KEY_DOWN)) getComponent<Transform>().addRotation(glm::vec3{0.0, -100.0, 0.0} * WTIME.delta);
+    auto& t = getComponent<Transform>();
+    if (WINDOW.getKey(KEY_LEFT)) t.addRotation(glm::vec3{0.0, 100.0, 0.0} * WTIME.delta);
+    if (WINDOW.getKey(KEY_RIGHT)) t.addRotation(glm::vec3{0.0, -100.0, 0.0} * WTIME.delta);
+    if (WINDOW.getKey(KEY_UP)) t.addRotation(glm::vec3{0.0, 0.0, 100.0} * WTIME.delta);
+    if (WINDOW.getKey(KEY_DOWN)) t.addRotation(glm::vec3{0.0, 0.0, 100.0} * WTIME.delta);
 }
 
 static constexpr std::initializer_list<float> vertices {
