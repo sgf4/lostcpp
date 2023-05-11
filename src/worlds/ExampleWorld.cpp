@@ -44,7 +44,6 @@ void ExampleWorld::update() {
     }
 
     if (WINDOW.getKey(KEY_X)) {
-        std::cout << getEntityCount() << "\n";
         Triangle& t = addEntity()
         .addComponent<Triangle>();
         auto& transform = t.getComponent<Transform>();

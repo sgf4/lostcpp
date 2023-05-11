@@ -16,8 +16,10 @@ You should have received a copy of the GNU General Public License
 along with lostcpp.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "triangle.hpp"
+#include "marble/keycodes.hpp"
 //#include "Shader.hpp"
-
+#include <marble/window.hpp>
+#include <marble/world.hpp>
 #include <marble/components/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -31,6 +33,11 @@ void Triangle::update() {
     auto& l = CM.getSystem<Triangle>();
     glUniformMatrix4fv(l.shader.getUniform("umodel"), 1, GL_FALSE, glm::value_ptr(TRANSFORM.model));
     glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    if (WINDOW.getKey(KEY_LEFT)) getComponent<Transform>().addRotation(glm::vec3{100.0, 0.0, 0.0} * WTIME.delta);
+    if (WINDOW.getKey(KEY_RIGHT)) getComponent<Transform>().addRotation(glm::vec3{-100.0, 0.0, 0.0} * WTIME.delta);
+    if (WINDOW.getKey(KEY_UP)) getComponent<Transform>().addRotation(glm::vec3{0.0, 100.0, 0.0} * WTIME.delta);
+    if (WINDOW.getKey(KEY_DOWN)) getComponent<Transform>().addRotation(glm::vec3{0.0, -100.0, 0.0} * WTIME.delta);
 }
 
 static constexpr std::initializer_list<float> vertices {
