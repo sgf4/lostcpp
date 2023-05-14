@@ -15,33 +15,32 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with lostcpp.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include "ExampleWorld.hpp"
+#include "example.hpp"
+#include <glm/gtx/string_cast.hpp>
 #include <marble/world.hpp>
 #include <marble/window.hpp>
 #include <marble/entity.hpp>
 #include <components/triangle.hpp>
 #include <marble/components/transform.hpp>
+#include "../components/cube.hpp"
 //#include "Component/Camera.hpp"
 
 using namespace ME;
 
 void ExampleWorld::init() {
-    CM.load<Triangle>();
-
     for (int i=0; i<10; i++) {
         for (int j=0; j<10; j++) {
-            for (int k=0; k<10; k++) {
-                addEntity().addComponent<Triangle>().getComponent<Transform>().position = glm::vec3(i, j, k);
-            }
+            addEntity().addComponent<Triangle>().getComponent<Transform>().position = glm::vec3(i, j, 0);
         }
     }
+
+    addEntity().addComponent<Cube>();
 }
 
 void ExampleWorld::update() {
-    auto& tsystem = CM.getSystem<Triangle>();
-    if (tsystem.count()) {
+    if (CM.count<Triangle>()) {
         if (WINDOW.getKey(KEY_C)) {
-            delEntity(tsystem.get(0).eId);
+            delEntity(CM.get<Triangle>(0));
         }
     }
 
@@ -54,8 +53,8 @@ void ExampleWorld::update() {
 
     static float timer {};
     timer += WTIME.delta;
-    if (timer > 5.f) {
-        std::cout << tsystem.count() << std::endl;
+    if (timer > 2.f) {
+        std::cout << CM.count<Triangle>() << std::endl;
         timer = 0.f;
     }
 }

@@ -15,5 +15,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with lostcpp.  If not, see <http://www.gnu.org/licenses/>. */
 
-#pragma once
+#include "cube.hpp"
+#include <marble/components/model.hpp>
 
+using namespace ME;
+
+void Cube::init() {
+    addComponent<Model>().setModel(CM.getSystem<Cube>().model);
+}
+
+void Cube::update() {
+}

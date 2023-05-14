@@ -1,14 +1,14 @@
 #version 330 core
-layout (location = 0) in vec2 apos;
-layout (location = 1) in vec3 acolor;
+layout (location = 0) in vec2 aPos;
+layout (location = 1) in vec3 aColor;
 
-uniform mat4 umodel;
-uniform mat4 uview;
-uniform mat4 uproj;
+uniform mat4 uModel;
+uniform mat4 uView;
+uniform mat4 uProj;
 
 out vec3 color;
 
 void main() {
-    color = acolor;
-    gl_Position = uproj * uview * umodel * vec4(apos, 0.0, 1.0);
+    color = aColor;
+    gl_Position = uProj * uView * uModel * vec4(aPos, 0.0, 1.0);
 }

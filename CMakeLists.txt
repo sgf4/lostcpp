@@ -24,13 +24,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
-set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
-set (CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -fsanitize=address")
 
-set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-if (WIN32)
-  set (CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_LINKER_FLAGS_RELEASE} -s -static")
-endif()
+# -ffunction-sections -fdata-sections
+#set (CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -ffunction-sections -fdata-sections -fvisibility=hidden -fno-rtti")
 
 
 message("Embedding files...")
@@ -44,6 +40,22 @@ execute_process(
   COMMAND ${Python3_EXECUTABLE} ${EMBED_SCRIPT} ${EMBED_FILES}
 )
 
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
+add_subdirectory(glfw)
+
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_NO_EXPORT ON CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_FBX_IMPORTER ON CACHE BOOL "" FORCE)
+add_subdirectory(assimp)
+
+target_compile_options(assimp PRIVATE -Wno-dangling-reference)
+
 add_subdirectory(marble)
 include_directories(src)
 
@@ -53,7 +65,16 @@ add_executable(lostcpp ${LOSTCPP_SOURCES})
 target_link_libraries(lostcpp PUBLIC marble)
 
 if (USE_PCH)
-  target_precompile_headers(lostcpp PUBLIC
+  target_precompile_headers(lostcpp PRIVATE
     src/stdafx.hpp
   )
+endif()
+
+
+set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
+set (CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -fsanitize=address")
+# set (CMAKE_C_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -ffunction-sections -fdata-sections -fvisibility=hidden")
+# set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -ffunction-sections -fdata-sections -fvisibility=hidden")
+if (WIN32)
+  set (CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_LINKER_FLAGS_RELEASE} -s -static")
 endif()

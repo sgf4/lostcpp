@@ -17,7 +17,7 @@ along with lostcpp.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "triangle.hpp"
 #include "marble/keycodes.hpp"
-//#include "Shader.hpp"
+#include <marble/components/shader.hpp>
 #include <marble/window.hpp>
 #include <marble/world.hpp>
 #include <marble/components/transform.hpp>
@@ -27,20 +27,18 @@ using namespace ME;
 
 void Triangle::init() {
     getEntity().addComponent<Transform>();
-    // addComponent<Shader>()
-        // .setShader(getSystem<Triangle>().shader);
+    addComponent<Shader>().setShader(CM.getSystem<Triangle>().shader);
 }
 
 void Triangle::update() {
     auto& l = CM.getSystem<Triangle>();
-    glUniformMatrix4fv(l.shader.getUniform("umodel"), 1, GL_FALSE, glm::value_ptr(TRANSFORM.model));
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-
     auto& t = getComponent<Transform>();
+    t.submitUniforms();
+    glDrawArrays(GL_TRIANGLES, 0, 3);
     if (WINDOW.getKey(KEY_LEFT)) t.addRotation(glm::vec3{0.0, 100.0, 0.0} * WTIME.delta);
     if (WINDOW.getKey(KEY_RIGHT)) t.addRotation(glm::vec3{0.0, -100.0, 0.0} * WTIME.delta);
-    if (WINDOW.getKey(KEY_UP)) t.addRotation(glm::vec3{0.0, 0.0, 100.0} * WTIME.delta);
-    if (WINDOW.getKey(KEY_DOWN)) t.addRotation(glm::vec3{0.0, 0.0, 100.0} * WTIME.delta);
+    if (WINDOW.getKey(KEY_UP)) t.addRotation(glm::vec3{100.0, 0.0, 0.0} * WTIME.delta);
+    if (WINDOW.getKey(KEY_DOWN)) t.addRotation(glm::vec3{-100.0, 0.0, 0.0} * WTIME.delta);
 }
 
 static constexpr std::initializer_list<float> vertices {

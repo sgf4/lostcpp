@@ -15,12 +15,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with lostcpp.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include <marble/engine.hpp>
-#include <worlds/example.hpp>
+#pragma once
+#include <marble/component.hpp>
+#include <embed.hpp>
 
-int main() {
-    ME::Engine engine;
-    engine.addWorld<ExampleWorld>();
-    engine.update();
-    return 0;
-}
+struct Cube : ME::Component {
+
+    void init();
+    void update();
+};
+
+#define cube_fbx embed<"cube.fbx">
+LOADER(Cube,
+    GL::Model model { cube_fbx.newXorInstance(), static_cast<u32>(cube_fbx.size) };
+);
+
+
