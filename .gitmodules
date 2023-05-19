@@ -1,9 +1,3 @@
 [submodule "marble"]
 	path = marble
 	url = https://github.com/sgf4/marble
-[submodule "glfw"]
-	path = glfw
-	url = https://github.com/glfw/glfw
-[submodule "assimp"]
-	path = assimp
-	url = https://github.com/assimp/assimp.git

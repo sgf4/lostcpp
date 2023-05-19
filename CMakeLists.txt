@@ -40,22 +40,6 @@ execute_process(
   COMMAND ${Python3_EXECUTABLE} ${EMBED_SCRIPT} ${EMBED_FILES}
 )
 
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
-add_subdirectory(glfw)
-
-set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(ASSIMP_NO_EXPORT ON CACHE BOOL "" FORCE)
-set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF CACHE BOOL "" FORCE)
-set(ASSIMP_BUILD_FBX_IMPORTER ON CACHE BOOL "" FORCE)
-add_subdirectory(assimp)
-
-target_compile_options(assimp PRIVATE -Wno-dangling-reference)
-
 add_subdirectory(marble)
 include_directories(src)
 
